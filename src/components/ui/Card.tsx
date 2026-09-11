@@ -20,9 +20,9 @@ export function Card({ padding = 'md', hover = false, className, children, ...pr
   return (
     <div
       className={cn(
-        'rounded-2xl border border-ink-100 bg-white shadow-card',
+        'card-luxury rounded-2xl border border-ink-100 bg-white shadow-card',
         paddings[padding],
-        hover && 'transition-shadow hover:shadow-md',
+        hover && 'hover:shadow-md',
         className,
       )}
       {...props}
@@ -36,7 +36,7 @@ export function CardIcon({ className, children, ...props }: HTMLAttributes<HTMLS
   return (
     <span
       className={cn(
-        'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-100 text-teal-700',
+        'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-100 text-teal-700 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] will-change-transform group-hover:scale-[1.06] group-hover:-rotate-1',
         className,
       )}
       {...props}

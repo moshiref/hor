@@ -30,13 +30,13 @@ export function Button({
   ...props
 }: Props) {
   const base =
-    'inline-flex items-center justify-center rounded-full font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none'
+    'inline-flex items-center justify-center rounded-full font-bold transition-all duration-300 will-change-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none hover:-translate-y-0.5 active:translate-y-0'
 
   const variants: Record<ButtonVariant, string> = {
     primary:
-      'bg-raspberry-500 text-white shadow-sm hover:bg-raspberry-600 focus-visible:outline-raspberry-700',
+      'bg-raspberry-500 text-white shadow-[0_6px_16px_rgba(196,28,99,0.24)] hover:bg-raspberry-600 hover:shadow-[0_10px_24px_rgba(196,28,99,0.30)] focus-visible:outline-raspberry-700',
     secondary:
-      'border-2 border-ink-700 text-ink-700 hover:bg-ink-700 hover:text-white focus-visible:outline-ink-700',
+      'border-2 border-ink-700 text-ink-700 hover:bg-ink-700 hover:text-white hover:shadow-md focus-visible:outline-ink-700',
     ghost: 'text-ink-600 hover:text-raspberry-600 hover:bg-ink-50 focus-visible:outline-raspberry-500',
   }
 
@@ -83,13 +83,13 @@ export function ButtonLink({
   size?: ButtonSize
 }) {
   const base =
-    'inline-flex items-center justify-center rounded-full font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2'
+    'inline-flex items-center justify-center rounded-full font-bold transition-all duration-300 will-change-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 hover:-translate-y-0.5 active:translate-y-0'
 
   const variants: Record<ButtonVariant, string> = {
     primary:
-      'bg-raspberry-500 text-white shadow-sm hover:bg-raspberry-600 focus-visible:outline-raspberry-700',
+      'bg-raspberry-500 text-white shadow-[0_6px_16px_rgba(196,28,99,0.24)] hover:bg-raspberry-600 hover:shadow-[0_10px_24px_rgba(196,28,99,0.30)] focus-visible:outline-raspberry-700',
     secondary:
-      'border-2 border-ink-700 text-ink-700 hover:bg-ink-700 hover:text-white focus-visible:outline-ink-700',
+      'border-2 border-ink-700 text-ink-700 hover:bg-ink-700 hover:text-white hover:shadow-md focus-visible:outline-ink-700',
     ghost: 'text-ink-600 hover:text-raspberry-600 hover:bg-ink-50 focus-visible:outline-raspberry-500',
   }
 

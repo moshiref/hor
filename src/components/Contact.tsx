@@ -1,5 +1,8 @@
 import { MessageCircle, Phone } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
+import { Reveal } from '@/components/effects/Reveal'
+import { Spotlight } from '@/components/effects/Spotlight'
+import { useMouseParallax } from '@/hooks/useMouseParallax'
 import { getSiteConfig } from '@/lib/siteStore'
 import { siteContentService } from '@/services/site.service'
 
@@ -10,19 +13,27 @@ export default function Contact() {
   // Display with LTR isolate to avoid RTL flipping
   const displayPhone = rawPhone
 
+  const parallaxRef = useMouseParallax(10)
   return (
-    <section id="contact" className="scroll-mt-20 bg-cream-50 py-20 sm:py-28" aria-labelledby="contact-heading">
+    <section
+      id="contact"
+      ref={parallaxRef as unknown as React.RefObject<HTMLDivElement>}
+      className="group/contact relative scroll-mt-20 overflow-hidden bg-cream-50 py-20 sm:py-28"
+      aria-labelledby="contact-heading"
+    >
+      <Spotlight />
       <Container>
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 id="contact-heading" className="font-display text-3xl font-bold text-ink-800 sm:text-4xl">
-            {contactSection.title}
-          </h2>
-          <p className="mt-4 text-lg leading-relaxed text-ink-600">
-            {contactSection.description}
-          </p>
-        </div>
+        <Reveal>
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 id="contact-heading" className="font-display text-3xl font-bold text-ink-800 sm:text-4xl">
+              {contactSection.title}
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-ink-600">{contactSection.description}</p>
+          </div>
+        </Reveal>
 
-        <div className="mx-auto mt-10 max-w-xl rounded-3xl bg-white p-8 shadow-card sm:p-10">
+        <Reveal delay={120}>
+          <div className="card-luxury mx-auto mt-10 max-w-xl rounded-3xl border border-ink-100 bg-white p-8 shadow-card sm:p-10">
           <div className="text-center">
             <p className="text-sm font-medium text-ink-400">{contactSection.phoneLabel}</p>
             <p className="mt-2 flex items-center justify-center gap-2">
@@ -56,7 +67,8 @@ export default function Contact() {
           <p className="mt-6 text-center text-xs leading-relaxed text-ink-400">
             يتم فتح واتساب مباشرة على الرقم الموحد. لا يتم جمع أي بيانات عبر هذه الروابط.
           </p>
-        </div>
+          </div>
+        </Reveal>
       </Container>
     </section>
   )

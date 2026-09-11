@@ -7,6 +7,9 @@ import { siteContentService } from '@/services/site.service'
 import { useImageUrl } from '@/hooks/useImageUrl'
 import { Container } from '@/components/ui/Container'
 
+const STAFF_HREF = '#staff-registration'
+const STAFF_LABEL = 'التقديم كعاملة رعاية طفولة'
+
 export default function Navbar() {
   const siteConfig = getSiteConfig()
   const logoUrl = useImageUrl(siteConfig.logoMark) ?? siteConfig.logoMark
@@ -30,16 +33,16 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-shadow duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-cream-50/95 shadow-[0_1px_0_0_rgba(23,35,60,0.08)] backdrop-blur'
-          : 'bg-cream-50/70 backdrop-blur-sm'
+          ? 'bg-cream-50/95 shadow-[0_1px_0_0_rgba(23,35,60,0.08),0_4px_24px_rgba(23,35,60,0.06)] backdrop-blur-xl'
+          : 'bg-cream-50/70 backdrop-blur-md'
       }`}
     >
       <Container>
         <nav
           aria-label="التنقل الرئيسي"
-          className="flex h-[4.5rem] items-center justify-between gap-4 py-3"
+          className="flex h-[4.5rem] items-center justify-between gap-3 py-3"
         >
           <a
             href="#hero"
@@ -62,13 +65,13 @@ export default function Navbar() {
           </a>
 
           {/* Desktop nav */}
-          <ul className="hidden items-center gap-1 md:flex">
+          <ul className="hidden items-center gap-1 lg:flex">
             {visibleLinks.map((link) => (
               <li key={link.href}>
                 <a
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className="rounded-md px-4 py-2 text-[0.95rem] font-medium text-ink-600 transition-colors hover:text-raspberry-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raspberry-500"
+                  className="rounded-md px-3.5 py-2 text-[0.92rem] font-medium text-ink-600 transition-colors hover:text-raspberry-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raspberry-500"
                 >
                   {link.label}
                 </a>
@@ -76,15 +79,36 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {header.isVisible && (
+          <div className="hidden items-center gap-2.5 md:flex">
+            {/* Primary header CTA — subtle */}
+            {header.isVisible && (
+              <a
+                href={header.ctaHref}
+                onClick={(e) => handleNavClick(e, header.ctaHref)}
+                className="hidden shrink-0 rounded-full bg-white px-5 py-2.5 text-sm font-bold text-ink-700 shadow-sm ring-1 ring-ink-200 transition-all hover:bg-ink-50 hover:ring-ink-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-700 xl:inline-block"
+              >
+                {header.ctaLabel}
+              </a>
+            )}
+
+            {/* Featured Staff CTA — luxury gradient + live dot */}
             <a
-              href={header.ctaHref}
-              onClick={(e) => handleNavClick(e, header.ctaHref)}
-              className="hidden shrink-0 rounded-full bg-raspberry-500 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-raspberry-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raspberry-700 md:inline-block"
+              href={STAFF_HREF}
+              onClick={(e) => handleNavClick(e, STAFF_HREF)}
+              className="group relative inline-flex shrink-0 items-center gap-2.5 rounded-full bg-gradient-to-l from-raspberry-500 via-raspberry-500 to-amber-500 px-5 py-2.5 text-sm font-bold text-white shadow-[0_6px_18px_rgba(196,28,99,0.28),0_2px_8px_rgba(222,159,53,0.18)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_10px_28px_rgba(196,28,99,0.34),0_4px_12px_rgba(222,159,53,0.22)] hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raspberry-600"
             >
-              {header.ctaLabel}
+              {/* live pulse dot */}
+              <span className="relative flex h-2.5 w-2.5 shrink-0">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-300 opacity-75" aria-hidden />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-white/60 shadow-[0_0_8px_rgba(52,211,153,0.7)] pulse-dot" aria-hidden />
+              </span>
+              {STAFF_LABEL}
+              <span
+                aria-hidden
+                className="absolute inset-0 rounded-full bg-gradient-to-l from-white/0 via-white/10 to-white/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              />
             </a>
-          )}
+          </div>
 
           {/* Mobile toggle */}
           <button
@@ -121,12 +145,26 @@ export default function Navbar() {
                   </a>
                 </li>
               ))}
+              {/* Mobile Staff CTA — featured */}
+              <li className="pt-3">
+                <a
+                  href={STAFF_HREF}
+                  onClick={(e) => handleNavClick(e, STAFF_HREF)}
+                  className="flex items-center justify-center gap-2 rounded-full bg-gradient-to-l from-raspberry-500 to-amber-500 px-5 py-3.5 text-center text-sm font-bold text-white shadow-[0_8px_20px_rgba(196,28,99,0.25)]"
+                >
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-300 opacity-75" />
+                    <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-white/60" />
+                  </span>
+                  {STAFF_LABEL} — مفتوح الآن
+                </a>
+              </li>
               {header.isVisible && (
                 <li className="pt-2">
                   <a
                     href={header.ctaHref}
                     onClick={(e) => handleNavClick(e, header.ctaHref)}
-                    className="block rounded-full bg-raspberry-500 px-5 py-3 text-center text-base font-bold text-white transition-colors hover:bg-raspberry-600"
+                    className="block rounded-full bg-white px-5 py-3 text-center text-base font-bold text-ink-700 ring-1 ring-ink-200 transition-colors hover:bg-ink-50"
                   >
                     {header.ctaLabel}
                   </a>

@@ -27,9 +27,14 @@ export default function Location() {
       <Container>
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
-            <h2 id="location-heading" className="font-display text-3xl font-bold text-ink-800 sm:text-4xl">
+            <p className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-3.5 py-1 text-xs font-bold tracking-wide text-teal-700 ring-1 ring-teal-200">
+              <span className="h-1.5 w-1.5 rounded-full bg-teal-500" aria-hidden />
+              موقعنا
+            </p>
+            <h2 id="location-heading" className="font-display bg-gradient-to-l from-teal-600 to-ink-700 bg-clip-text text-3xl font-bold text-transparent sm:text-4xl">
               {locSection.title}
             </h2>
+            <div aria-hidden className="mx-auto mt-3 h-1 w-16 rounded-full bg-gradient-to-l from-teal-400 to-ink-400" />
             <p className="mt-3 text-sm text-ink-400">{locSection.helperText}</p>
           </div>
         </Reveal>

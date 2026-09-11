@@ -48,9 +48,14 @@ export default function Activities() {
       <Container>
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
-            <h2 id="activities-heading" className="font-display text-3xl font-bold text-ink-800 sm:text-4xl">
+            <p className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-3.5 py-1 text-xs font-bold tracking-wide text-teal-700 ring-1 ring-teal-200">
+              <span className="h-1.5 w-1.5 rounded-full bg-teal-500" aria-hidden />
+              أنشطة وفعاليات
+            </p>
+            <h2 id="activities-heading" className="font-display bg-gradient-to-l from-teal-600 via-teal-600 to-raspberry-400 bg-clip-text text-3xl font-bold text-transparent sm:text-4xl">
               {data.title}
             </h2>
+            <div aria-hidden className="mx-auto mt-3 h-1 w-16 rounded-full bg-gradient-to-l from-teal-400 to-amber-300" />
             <p className="mt-4 text-lg leading-relaxed text-ink-600">{data.description}</p>
           </div>
         </Reveal>

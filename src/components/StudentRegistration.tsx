@@ -112,9 +112,14 @@ export default function StudentRegistration() {
     <section id="registration" className="scroll-mt-20 bg-white py-20 sm:py-28" aria-labelledby="reg-heading">
       <Container>
         <div className="mx-auto max-w-3xl text-center">
-          <h2 id="reg-heading" className="font-display text-3xl font-bold text-ink-800 sm:text-4xl">
+          <p className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-raspberry-50 px-3.5 py-1 text-xs font-bold tracking-wide text-raspberry-700 ring-1 ring-raspberry-200">
+            <span className="h-1.5 w-1.5 rounded-full bg-raspberry-500 pulse-dot inline-block" aria-hidden />
+            التسجيل مفتوح الآن
+          </p>
+          <h2 id="reg-heading" className="font-display bg-gradient-to-l from-raspberry-600 via-raspberry-500 to-teal-600 bg-clip-text text-3xl font-bold text-transparent sm:text-4xl">
             {formConfig.title}
           </h2>
+          <div aria-hidden className="mx-auto mt-3 h-1 w-16 rounded-full bg-gradient-to-l from-raspberry-400 to-teal-400" />
           <p className="mt-4 text-lg leading-relaxed text-ink-600">{formConfig.description}</p>
         </div>
 

@@ -25,9 +25,14 @@ export default function Contact() {
       <Container>
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
-            <h2 id="contact-heading" className="font-display text-3xl font-bold text-ink-800 sm:text-4xl">
+            <p className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-ink-50 px-3.5 py-1 text-xs font-bold tracking-wide text-ink-700 ring-1 ring-ink-200">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
+              تواصل معنا
+            </p>
+            <h2 id="contact-heading" className="font-display bg-gradient-to-l from-ink-800 to-teal-600 bg-clip-text text-3xl font-bold text-transparent sm:text-4xl">
               {contactSection.title}
             </h2>
+            <div aria-hidden className="mx-auto mt-3 h-1 w-16 rounded-full bg-gradient-to-l from-ink-600 to-teal-400" />
             <p className="mt-4 text-lg leading-relaxed text-ink-600">{contactSection.description}</p>
           </div>
         </Reveal>

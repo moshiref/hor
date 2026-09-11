@@ -51,9 +51,13 @@ export default function About() {
           {/* Copy */}
           <Reveal delay={0}>
             <div className="text-center lg:text-right">
+              <p className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-raspberry-50 px-3.5 py-1 text-xs font-bold tracking-wide text-raspberry-700 ring-1 ring-raspberry-200 lg:ml-auto">
+                <span className="h-1.5 w-1.5 rounded-full bg-raspberry-500" aria-hidden />
+                من نحن
+              </p>
               <h2
                 id="about-heading"
-                className="font-display relative inline-block pb-2 text-3xl font-bold text-raspberry-600 sm:text-4xl"
+                className="font-display relative inline-block bg-gradient-to-l from-raspberry-600 to-amber-500 bg-clip-text pb-2 text-3xl font-bold text-transparent sm:text-4xl"
               >
                 {content.title}
                 <span

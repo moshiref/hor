@@ -127,9 +127,17 @@ export default function StaffRegistration() {
     <section id="staff-registration" className="scroll-mt-20 bg-cream-50 py-20 sm:py-28" aria-labelledby="staff-heading">
       <Container>
         <div className="mx-auto max-w-3xl text-center">
-          <h2 id="staff-heading" className="font-display text-3xl font-bold text-ink-800 sm:text-4xl">
+          <p className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-l from-raspberry-50 to-amber-50 px-3.5 py-1 text-xs font-bold tracking-wide text-raspberry-700 ring-1 ring-raspberry-200">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
+            التقديم كعاملة رعاية طفولة — مفتوح الآن
+          </p>
+          <h2 id="staff-heading" className="font-display bg-gradient-to-l from-teal-600 via-raspberry-500 to-amber-500 bg-clip-text text-3xl font-bold text-transparent sm:text-4xl">
             {formConfig.title}
           </h2>
+          <div aria-hidden className="mx-auto mt-3 h-1 w-16 rounded-full bg-gradient-to-l from-teal-400 via-raspberry-400 to-amber-300" />
           <p className="mt-4 text-lg leading-relaxed text-ink-600">{formConfig.description}</p>
         </div>
 

@@ -21,9 +21,14 @@ export default function Schedule() {
       <Container>
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
-            <h2 id="schedule-heading" className="font-display text-3xl font-bold text-ink-800 sm:text-4xl">
+            <p className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3.5 py-1 text-xs font-bold tracking-wide text-amber-700 ring-1 ring-amber-200">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" aria-hidden />
+              المواعيد والفترات
+            </p>
+            <h2 id="schedule-heading" className="font-display bg-gradient-to-l from-amber-600 via-amber-500 to-raspberry-500 bg-clip-text text-3xl font-bold text-transparent sm:text-4xl">
               {scheduleContent.title}
             </h2>
+            <div aria-hidden className="mx-auto mt-3 h-1 w-16 rounded-full bg-gradient-to-l from-amber-400 to-raspberry-400" />
             <p className="mt-4 text-lg leading-relaxed text-ink-600">{scheduleContent.description}</p>
           </div>
         </Reveal>

@@ -1,8 +1,8 @@
 import { getSiteConfig } from '@/lib/siteStore'
 
 /**
- * Floating WhatsApp Button — ثابت في أسفل يسار الشاشة (مناسب لـ RTL)
- * - لا يغطي المحتوى: bottom-5 left-5 مع مسافة آمنة
+ * Floating WhatsApp Button — ثابت في أسفل يمين الشاشة
+ * - لا يغطي المحتوى: bottom-5 right-5 مع مسافة آمنة
  * - z-[60] فوق Navbar (z-50) وتحت الـ modals إن وجدت
  * - حركة ظهور خفيفة فقط (fade+scale) بدون تكرار
  * - قابل للتحكم من siteConfig.whatsappFloating (Admin → إعدادات الموقع → WhatsApp)
@@ -18,7 +18,7 @@ export default function WhatsAppFloat() {
 
   return (
     <div
-      className="pointer-events-none fixed bottom-5 left-5 z-[60] flex flex-col items-start gap-2"
+      className="pointer-events-none fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-2"
       aria-hidden={false}
     >
       <a
@@ -33,7 +33,7 @@ export default function WhatsAppFloat() {
         {/* Tooltip — يظهر عند Hover/Focus فقط، بدون JS */}
         <span
           role="tooltip"
-          className="pointer-events-none absolute bottom-1/2 left-full ms-3 hidden -translate-y-1/2 whitespace-nowrap rounded-full bg-ink-800 px-4 py-2 text-sm font-medium text-white shadow-md group-hover:inline-flex group-focus-visible:inline-flex"
+          className="pointer-events-none absolute bottom-1/2 right-full me-3 hidden -translate-y-1/2 whitespace-nowrap rounded-full bg-ink-800 px-4 py-2 text-sm font-medium text-white shadow-md group-hover:inline-flex group-focus-visible:inline-flex"
         >
           {cfg.hoverText}
         </span>

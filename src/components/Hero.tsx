@@ -48,12 +48,16 @@ export default function Hero() {
     >
       <Spotlight className="opacity-60" />
 
-      {/* subtle arc + orbs — kept but softened */}
+      {/* subtle gold arc — luxury soft gold frame */}
       <div
         aria-hidden
         data-parallax
         data-parallax-depth="0.35"
-        className="pointer-events-none absolute -left-40 top-24 hidden h-[420px] w-[420px] rounded-full border-[28px] border-amber-300/20 lg:block will-change-transform"
+        className="pointer-events-none absolute -left-40 top-24 hidden h-[420px] w-[420px] rounded-full border-[22px] lg:block will-change-transform"
+        style={{
+          borderColor: 'rgba(212,165,116,0.14)',
+          boxShadow: '0 0 22px rgba(212,165,116,0.10), inset 0 0 18px rgba(232,201,154,0.06)',
+        }}
       />
       <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-[380px] w-[380px] rounded-full bg-gradient-to-br from-raspberry-100/45 to-amber-100/35 blur-3xl" />
       <div aria-hidden className="pointer-events-none absolute -left-20 bottom-10 h-[320px] w-[320px] rounded-full bg-teal-100/35 blur-3xl" />
@@ -123,35 +127,65 @@ export default function Hero() {
                 <div className="h-[44%] w-[44%] rounded-full bg-white/70 blur-[22px]" />
               </div>
 
-              {/* orbit guide rings — very subtle */}
+              {/* orbit guide rings — premium soft gold, layered depth */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute left-1/2 top-1/2 h-[calc(var(--hero-r)*2+96px)] w-[calc(var(--hero-r)*2+96px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-ink-200/25"
-                style={{ maskImage: 'radial-gradient(circle, black 72%, transparent 100%)', WebkitMaskImage: 'radial-gradient(circle, black 72%, transparent 100%)' }}
+                className="pointer-events-none absolute left-1/2 top-1/2 h-[calc(var(--hero-r)*2+96px)] w-[calc(var(--hero-r)*2+96px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed max-sm:h-[calc(var(--hero-r)*2+68px)] max-sm:w-[calc(var(--hero-r)*2+68px)]"
+                style={{
+                  borderColor: 'rgba(212,165,116,0.20)',
+                  borderWidth: '1.2px',
+                  boxShadow: '0 0 14px rgba(212,165,116,0.07), 0 0 26px rgba(232,201,154,0.05)',
+                  maskImage: 'radial-gradient(circle, black 72%, transparent 100%)',
+                  WebkitMaskImage: 'radial-gradient(circle, black 72%, transparent 100%)',
+                }}
               />
-              <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 h-[calc(var(--hero-r)*2+34px)] w-[calc(var(--hero-r)*2+34px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink-200/20" />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute left-1/2 top-1/2 h-[calc(var(--hero-r)*2+34px)] w-[calc(var(--hero-r)*2+34px)] -translate-x-1/2 -translate-y-1/2 rounded-full max-sm:h-[calc(var(--hero-r)*2+24px)] max-sm:w-[calc(var(--hero-r)*2+24px)]"
+                style={{
+                  border: '1px solid rgba(212,165,116,0.24)',
+                  boxShadow: '0 0 10px rgba(212,165,116,0.08), 0 0 18px rgba(212,165,116,0.05)',
+                }}
+              />
 
-              {/* pulse rings around center */}
+              {/* pulse rings — luxury soft gold with depth variation */}
               <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
-                <div className="absolute h-[360px] w-[360px] max-h-[92%] max-w-[92%] rounded-full border border-raspberry-200/25 pulse-ring sm:h-[420px] sm:w-[420px]" />
                 <div
-                  aria-hidden
-                  className="absolute h-[320px] w-[320px] max-h-[82%] max-w-[82%] rounded-full border border-amber-200/25 pulse-ring sm:h-[380px] sm:w-[380px]"
-                  style={{ animationDelay: '0.45s' }}
+                  className="absolute h-[360px] w-[360px] max-h-[92%] max-w-[92%] rounded-full pulse-ring sm:h-[420px] sm:w-[420px]"
+                  style={{
+                    border: '1.2px solid rgba(232,201,154,0.26)',
+                    boxShadow: '0 0 10px rgba(212,165,116,0.09)',
+                    filter: 'drop-shadow(0 0 6px rgba(212,165,116,0.08))',
+                  }}
                 />
                 <div
                   aria-hidden
-                  className="absolute h-[280px] w-[280px] max-h-[72%] max-w-[72%] rounded-full border border-teal-200/20 pulse-ring sm:h-[340px] sm:w-[340px]"
-                  style={{ animationDelay: '0.9s' }}
+                  className="absolute h-[320px] w-[320px] max-h-[82%] max-w-[82%] rounded-full pulse-ring sm:h-[380px] sm:w-[380px]"
+                  style={{
+                    animationDelay: '0.45s',
+                    border: '1px solid rgba(212,165,116,0.20)',
+                    boxShadow: '0 0 9px rgba(212,165,116,0.07)',
+                    filter: 'drop-shadow(0 0 5px rgba(212,165,116,0.06))',
+                  }}
+                />
+                <div
+                  aria-hidden
+                  className="absolute h-[280px] w-[280px] max-h-[72%] max-w-[72%] rounded-full pulse-ring sm:h-[340px] sm:w-[340px]"
+                  style={{
+                    animationDelay: '0.9s',
+                    border: '1px solid rgba(185,130,82,0.16)',
+                    boxShadow: '0 0 8px rgba(185,130,82,0.06)',
+                    filter: 'drop-shadow(0 0 4px rgba(212,165,116,0.05))',
+                  }}
                 />
               </div>
 
-              {/* subtle radial spokes */}
+              {/* subtle gold radial ticks — depth accent */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute left-1/2 top-1/2 h-[calc(var(--hero-r)*2+20px)] w-[calc(var(--hero-r)*2+20px)] -translate-x-1/2 -translate-y-1/2 opacity-[0.045]"
+                className="pointer-events-none absolute left-1/2 top-1/2 h-[calc(var(--hero-r)*2+20px)] w-[calc(var(--hero-r)*2+20px)] -translate-x-1/2 -translate-y-1/2 opacity-[0.055] max-sm:opacity-[0.035]"
                 style={{
-                  background: `conic-gradient(from 0deg, transparent 0deg, rgba(23,35,60,0.55) 1deg, transparent 2deg, transparent 44deg, rgba(23,35,60,0.55) 45deg, transparent 46deg, transparent 89deg, rgba(23,35,60,0.55) 90deg, transparent 91deg, transparent 134deg, rgba(23,35,60,0.55) 135deg, transparent 136deg, transparent 179deg, rgba(23,35,60,0.55) 180deg, transparent 181deg, transparent 224deg, rgba(23,35,60,0.55) 225deg, transparent 226deg, transparent 269deg, rgba(23,35,60,0.55) 270deg, transparent 271deg, transparent 314deg, rgba(23,35,60,0.55) 315deg, transparent 316deg, transparent 360deg)`,
+                  background: `conic-gradient(from 0deg, transparent 0deg, rgba(212,165,116,0.55) 1deg, transparent 2deg, transparent 44deg, rgba(212,165,116,0.50) 45deg, transparent 46deg, transparent 89deg, rgba(185,130,82,0.45) 90deg, transparent 91deg, transparent 134deg, rgba(212,165,116,0.45) 135deg, transparent 136deg, transparent 179deg, rgba(212,165,116,0.50) 180deg, transparent 181deg, transparent 224deg, rgba(232,201,154,0.45) 225deg, transparent 226deg, transparent 269deg, rgba(212,165,116,0.50) 270deg, transparent 271deg, transparent 314deg, rgba(185,130,82,0.40) 315deg, transparent 316deg, transparent 360deg)`,
                 }}
               />
 
@@ -175,17 +209,19 @@ export default function Hero() {
                   {/* inner crystal rim + inner shadow */}
                   <div className="absolute inset-[13px] rounded-full bg-gradient-to-br from-white to-cream-50 shadow-[inset_0_1px_10px_rgba(23,35,60,0.07),inset_0_-1px_6px_rgba(255,255,255,0.9)]" aria-hidden />
                   <div className="absolute inset-0 rounded-full shadow-[inset_0_0_0_1px_rgba(255,255,255,0.9)]" aria-hidden />
-                  {/* pearlescent edge */}
+                  {/* premium soft gold edge — luxury frame */}
                   <div
                     aria-hidden
-                    className="absolute -inset-px rounded-full opacity-60"
+                    className="absolute -inset-px rounded-full opacity-[0.72] max-sm:opacity-[0.52]"
                     style={{
-                      background: 'conic-gradient(from 220deg at 50% 50%, rgba(196,28,99,0.10), rgba(222,159,53,0.10), rgba(30,106,133,0.10), rgba(196,28,99,0.10))',
+                      background:
+                        'conic-gradient(from 220deg at 50% 50%, rgba(232,201,154,0.32), rgba(212,165,116,0.34), rgba(185,130,82,0.26), rgba(232,201,154,0.28))',
                       mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                       WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                       WebkitMaskComposite: 'xor',
                       maskComposite: 'exclude',
-                      padding: '1.5px',
+                      padding: '1.4px',
+                      filter: 'drop-shadow(0 0 6px rgba(212,165,116,0.16))',
                     }}
                   />
                   <img

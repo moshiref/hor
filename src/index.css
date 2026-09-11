@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "El Messiri", "Almarai", sans-serif;
+  --font-body: "Almarai", "El Messiri", sans-serif;
+
+  /* Ink navy — trust, headings, primary text */
+  --color-ink-50: #F2F5F9;
+  --color-ink-100: #E3E9F1;
+  --color-ink-400: #4A5D82;
+  --color-ink-600: #2A3D63;
+  --color-ink-700: #1F2E4D;
+  --color-ink-800: #17233C;
+  --color-ink-900: #101A2E;
+
+  /* Raspberry — primary brand accent, from the logo's pink figure */
+  --color-raspberry-50: #FDF1F5;
+  --color-raspberry-100: #FBE1EA;
+  --color-raspberry-200: #F5BCD3;
+  --color-raspberry-400: #DB3E80;
+  --color-raspberry-500: #C41C63;
+  --color-raspberry-600: #A9154F;
+  --color-raspberry-700: #871040;
+
+  /* Amber — warm secondary accent, from the logo's pencil */
+  --color-amber-100: #FBEAD0;
+  --color-amber-300: #EFC272;
+  --color-amber-500: #DE9F35;
+  --color-amber-600: #BD8323;
+
+  /* Teal — tertiary accent, from the logo's blue figure */
+  --color-teal-100: #DCEEF3;
+  --color-teal-400: #3E90AC;
+  --color-teal-600: #1E6A85;
+  --color-teal-700: #17546A;
+
+  /* Warm neutral background */
+  --color-cream-50: #FDFBF8;
+  --color-cream-100: #FAF6F0;
+  --color-cream-200: #F3ECE1;
+
+  /* Design System — Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  --radius-full: 9999px;
+
+  /* Design System — Shadows */
+  --shadow-sm: 0 1px 2px rgba(23, 35, 60, 0.06);
+  --shadow-md: 0 4px 12px rgba(23, 35, 60, 0.08);
+  --shadow-lg: 0 10px 30px -12px rgba(23, 35, 60, 0.25);
+  --shadow-card: 0 2px 10px rgba(23, 35, 60, 0.06);
+
+  /* Design System — Motion */
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-cream-100);
+  color: var(--color-ink-800);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Focus ring — unified across the product */
+*:focus-visible {
+  outline: 2px solid var(--color-raspberry-500);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-raspberry-100);
+  color: var(--color-raspberry-700);
+}
+
+@media print {
+  header, aside, .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+  }
+  main {
+    padding: 0 !important;
+  }
+}

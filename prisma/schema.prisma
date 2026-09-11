@@ -1,0 +1,140 @@
+// Prisma schema — مقترح للتنفيذ (Free / Open Source)
+// DB: PostgreSQL (Neon / Supabase free tier)
+// Install: npm i -D prisma && npx prisma init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  super_admin
+  admin
+  viewer
+}
+
+enum ApplicationStatus {
+  new
+  under_review
+  contacted
+  accepted
+  rejected
+  archived
+}
+
+enum Gender {
+  male
+  female
+}
+
+enum Stage {
+  nursery
+  kindergarten
+  pre_primary
+}
+
+enum Period {
+  morning
+  evening
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         Role     @default(admin)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  reviewedStudents StudentApplication[] @relation("ReviewedStudents")
+  reviewedStaff    StaffApplication[]   @relation("ReviewedStaff")
+
+  @@map("users")
+}
+
+model StudentApplication {
+  id              String            @id @default(cuid())
+  studentName     String            @map("student_name")
+  birthDate       DateTime          @map("birth_date") @db.Date
+  gender          Gender
+  stage           Stage
+  period          Period
+  guardianName    String            @map("guardian_name")
+  guardianPhone   String            @map("guardian_phone") // encrypted at rest
+  district        String
+  needsTransport  Boolean           @map("needs_transport")
+  healthNotes     String?           @map("health_notes") // encrypted
+  extraNotes      String?           @map("extra_notes") // encrypted
+  status          ApplicationStatus @default(new)
+  reviewedAt      DateTime?         @map("reviewed_at")
+  reviewedById    String?           @map("reviewed_by")
+  reviewedBy      User?             @relation("ReviewedStudents", fields: [reviewedById], references: [id])
+  notesInternal   String?           @map("notes_internal")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  deletedAt       DateTime?         @map("deleted_at")
+
+  @@index([status, createdAt])
+  @@map("student_applications")
+}
+
+model StaffApplication {
+  id               String            @id @default(cuid())
+  fullName         String            @map("full_name")
+  phone            String            // encrypted
+  currentEmployer  String            @map("current_employer")
+  currentRole      String            @map("current_role")
+  reasonToJoin     String            @map("reason_to_join")
+  wantsToJoinList  Boolean           @map("wants_to_join_list")
+  futureTopics     String            @map("future_topics") // JSON string
+  status           ApplicationStatus @default(new)
+  reviewedAt       DateTime?         @map("reviewed_at")
+  reviewedById     String?           @map("reviewed_by")
+  reviewedBy       User?             @relation("ReviewedStaff", fields: [reviewedById], references: [id])
+  notesInternal    String?           @map("notes_internal")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  deletedAt        DateTime?         @map("deleted_at")
+
+  @@index([status, createdAt])
+  @@map("staff_applications")
+}
+
+model Program {
+  id        String   @id @default(cuid())
+  title     String
+  description String
+  icon      String
+  order     Int      @default(0)
+  isVisible Boolean  @default(true) @map("is_visible")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("programs")
+}
+
+model SiteConfig {
+  id           String @id @default(cuid())
+  name         String
+  shortName    String @map("short_name")
+  tagline      String
+  logoMarkUrl  String @map("logo_mark_url")
+  seoTitle     String @map("seo_title")
+  seoDescription String @map("seo_description")
+  contactPhone String? @map("contact_phone") // encrypted
+  whatsapp     String? // encrypted
+  addressLabel String? @map("address_label")
+  locationJson String? @map("location_json") // JSON
+  socialJson   String? @map("social_json") // JSON
+  // WhatsApp Floating — Admin → إعدادات الموقع → WhatsApp
+  whatsappFloatingEnabled      Boolean @default(true) @map("whatsapp_floating_enabled")
+  whatsappFloatingPhone        String  @default("966547893386") @map("whatsapp_floating_phone")
+  whatsappFloatingHoverText    String  @default("تواصل معنا عبر واتساب") @map("whatsapp_floating_hover_text")
+  whatsappFloatingDefaultMessage String? @map("whatsapp_floating_default_message")
+
+  @@map("site_config")
+}

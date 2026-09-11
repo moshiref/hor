@@ -14,10 +14,12 @@ export default function Login() {
     return null
   }
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (login(email, pass)) nav('/admin', { replace: true })
-    else setErr('بيانات الدخول غير صحيحة')
+    setErr('')
+    const ok = await login(email, pass)
+    if (ok) nav('/admin', { replace: true })
+    else setErr('بيانات الدخول غير صحيحة — تأكد من إنشاء المستخدم في Supabase Dashboard > Authentication')
   }
 
   return (

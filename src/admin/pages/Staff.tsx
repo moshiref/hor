@@ -91,12 +91,12 @@ export default function Staff() {
   }
 
   return (
-    <div className="space-y-4">
-      <h1 className="font-display text-xl font-bold text-ink-800">طلبات العاملات — {filtered.length} / {raw.length}</h1>
-      <div className="rounded-2xl bg-white p-4 shadow-card space-y-4">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="بحث بالاسم أو الجوال..." className="rounded-xl border border-ink-100 px-3 py-2 text-sm" />
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="rounded-xl border border-ink-100 px-3 py-2 text-sm">
+    <div className="min-w-0 space-y-4">
+      <h1 className="break-words font-display text-lg font-bold leading-tight text-ink-800 sm:text-xl">طلبات العاملات — {filtered.length} / {raw.length}</h1>
+      <div className="min-w-0 space-y-4 overflow-hidden rounded-2xl bg-white p-3 shadow-card sm:p-4">
+        <div className="grid min-w-0 gap-2.5 sm:gap-3 grid-cols-1 min-[430px]:grid-cols-2 lg:grid-cols-5">
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="بحث بالاسم أو الجوال..." className="min-h-[42px] min-w-0 w-full rounded-xl border border-ink-100 px-3 py-2.5 text-sm focus:border-raspberry-200 focus:outline-none focus:ring-2 focus:ring-raspberry-100" />
+          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="min-h-[42px] min-w-0 w-full rounded-xl border border-ink-100 bg-white px-3 py-2.5 text-sm">
             <option value="all">كل الحالات</option>
             <option value="new">جديد</option>
             <option value="under_review">قيد المراجعة</option>
@@ -104,94 +104,100 @@ export default function Staff() {
             <option value="accepted">مقبول</option>
             <option value="rejected">مرفوض</option>
           </select>
-          <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="rounded-xl border border-ink-100 px-3 py-2 text-sm" />
-          <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="rounded-xl border border-ink-100 px-3 py-2 text-sm" />
-          <select value={sort} onChange={(e) => setSort(e.target.value as SortOpt)} className="rounded-xl border border-ink-100 px-3 py-2 text-sm">
+          <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="min-h-[42px] min-w-0 w-full rounded-xl border border-ink-100 px-3 py-2.5 text-sm" />
+          <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="min-h-[42px] min-w-0 w-full rounded-xl border border-ink-100 px-3 py-2.5 text-sm" />
+          <select value={sort} onChange={(e) => setSort(e.target.value as SortOpt)} className="min-h-[42px] min-w-0 w-full rounded-xl border border-ink-100 bg-white px-3 py-2.5 text-sm">
             <option value="newest">الأحدث</option>
             <option value="oldest">الأقدم</option>
             <option value="az">أبجدي أ → ي</option>
             <option value="za">أبجدي ي → أ</option>
           </select>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <button onClick={doExcel} className="rounded-full bg-teal-600 px-4 py-1.5 text-sm font-bold text-white">Excel</button>
-          <button onClick={doPdf} className="rounded-full bg-raspberry-500 px-4 py-1.5 text-sm font-bold text-white">PDF</button>
-          <button onClick={() => printTable('staff-table')} className="rounded-full border border-ink-200 px-4 py-1.5 text-sm font-bold text-ink-700">طباعة</button>
+        <div className="flex flex-col gap-2 min-[380px]:flex-row min-[380px]:flex-wrap min-[380px]:items-center">
+          <div className="flex flex-wrap gap-2">
+            <button onClick={doExcel} className="inline-flex min-h-[36px] items-center justify-center rounded-full bg-teal-600 px-4 py-2 text-sm font-bold text-white hover:bg-teal-700">Excel</button>
+            <button onClick={doPdf} className="inline-flex min-h-[36px] items-center justify-center rounded-full bg-raspberry-500 px-4 py-2 text-sm font-bold text-white hover:bg-raspberry-600">PDF</button>
+            <button onClick={() => printTable('staff-table')} className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-ink-200 bg-white px-4 py-2 text-sm font-bold text-ink-700 hover:bg-ink-50">طباعة</button>
+          </div>
           {selected.length > 0 && (
-            <>
-              <span className="ms-2 text-sm text-ink-600">{selected.length} محدد</span>
-              <button onClick={handleDeleteSelected} className="rounded-full bg-raspberry-100 px-4 py-1.5 text-sm font-bold text-raspberry-700">حذف المحدد</button>
-            </>
+            <div className="flex flex-wrap items-center gap-2 border-t border-gray-100 pt-2 min-[380px]:border-0 min-[380px]:pt-0">
+              <span className="text-sm font-medium text-ink-600">{selected.length} محدد</span>
+              <button onClick={handleDeleteSelected} className="inline-flex min-h-[36px] items-center justify-center rounded-full bg-raspberry-100 px-4 py-2 text-sm font-bold text-raspberry-700 hover:bg-raspberry-200">حذف المحدد</button>
+            </div>
           )}
         </div>
 
-        <div id="staff-table" className="overflow-x-auto">
-          <table className="w-full min-w-[1000px] border-collapse text-sm">
-            <thead>
-              <tr className="bg-ink-800 text-white">
-                <th className="p-2"><input type="checkbox" checked={selected.length === filtered.length && filtered.length > 0} onChange={toggleAll} /></th>
-                {columns.map((c) => <th key={c} className="p-2 text-center">{c}</th>)}
-                <th className="p-2">إجراءات</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.length === 0 ? <tr><td colSpan={11} className="p-8 text-center text-ink-400">لا توجد نتائج</td></tr> : filtered.map((r) => (
-                <tr key={r.id} className="border-b border-ink-100 hover:bg-cream-50">
-                  <td className="p-2 text-center"><input type="checkbox" checked={selected.includes(r.id)} onChange={() => toggleSelect(r.id)} /></td>
-                  <td className="p-2 text-center"><button onClick={() => setDetail(r)} className="font-bold text-raspberry-600 hover:underline">{r.fullName}</button></td>
-                  <td className="p-2 text-center"><bdi dir="ltr">{r.phone}</bdi></td>
-                  <td className="p-2 text-center">{r.currentEmployer}</td>
-                  <td className="p-2 text-center">{r.currentRole}</td>
-                  <td className="p-2 text-center text-xs">{r.reasonToJoin}</td>
-                  <td className="p-2 text-center">{r.wantsToJoinList === 'yes' ? 'نعم' : 'لا'}</td>
-                  <td className="p-2 text-center text-xs max-w-[180px] truncate">{r.futureTopics}</td>
-                  <td className="p-2 text-center">
-                    <select value={r.status} onChange={(e) => handleStatus(r.id, e.target.value as StaffApplication['status'])} className="rounded-full border border-ink-100 px-2 py-1 text-xs">
-                      <option value="new">جديد</option>
-                      <option value="under_review">قيد المراجعة</option>
-                      <option value="contacted">تم التواصل</option>
-                      <option value="accepted">مقبول</option>
-                      <option value="rejected">مرفوض</option>
-                    </select>
-                  </td>
-                  <td className="p-2 text-center text-xs">{new Date(r.createdAt).toLocaleDateString('ar-SA')}</td>
-                  <td className="p-2 text-center"><button onClick={() => handleDeleteOne(r.id)} className="text-xs text-raspberry-600">حذف</button></td>
+        <div id="staff-table" className="-mx-3 overflow-hidden sm:mx-0 sm:rounded-xl sm:border sm:border-ink-100">
+          <div className="overflow-x-auto overscroll-x-contain">
+            <table className="w-full min-w-[980px] border-collapse text-sm">
+              <thead>
+                <tr className="bg-ink-800 text-white">
+                  <th className="p-2.5 text-center"><input type="checkbox" checked={selected.length === filtered.length && filtered.length > 0} onChange={toggleAll} className="h-4 w-4" aria-label="تحديد الكل" /></th>
+                  {columns.map((c) => <th key={c} className="whitespace-nowrap p-2.5 text-center text-xs font-bold sm:text-sm">{c}</th>)}
+                  <th className="whitespace-nowrap p-2.5 text-center text-xs font-bold sm:text-sm">إجراءات</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filtered.length === 0 ? <tr><td colSpan={11} className="p-8 text-center text-ink-400">لا توجد نتائج</td></tr> : filtered.map((r) => (
+                  <tr key={r.id} className="border-b border-ink-100 hover:bg-cream-50">
+                    <td className="p-2 text-center"><input type="checkbox" checked={selected.includes(r.id)} onChange={() => toggleSelect(r.id)} className="h-4 w-4" /></td>
+                    <td className="p-2 text-center"><button onClick={() => setDetail(r)} className="block max-w-[130px] truncate font-bold text-raspberry-600 hover:underline">{r.fullName}</button></td>
+                    <td className="whitespace-nowrap p-2 text-center text-xs"><bdi dir="ltr">{r.phone}</bdi></td>
+                    <td className="p-2 text-center text-xs"><span className="block max-w-[120px] truncate">{r.currentEmployer}</span></td>
+                    <td className="p-2 text-center text-xs"><span className="block max-w-[120px] truncate">{r.currentRole}</span></td>
+                    <td className="p-2 text-center text-xs"><span className="block max-w-[160px] truncate">{r.reasonToJoin}</span></td>
+                    <td className="whitespace-nowrap p-2 text-center text-xs">{r.wantsToJoinList === 'yes' ? 'نعم' : 'لا'}</td>
+                    <td className="p-2 text-center text-xs"><span className="block max-w-[180px] truncate">{r.futureTopics}</span></td>
+                    <td className="p-2 text-center">
+                      <select value={r.status} onChange={(e) => handleStatus(r.id, e.target.value as StaffApplication['status'])} className="max-w-[120px] rounded-full border border-ink-100 bg-white px-2 py-1.5 text-xs">
+                        <option value="new">جديد</option>
+                        <option value="under_review">قيد المراجعة</option>
+                        <option value="contacted">تم التواصل</option>
+                        <option value="accepted">مقبول</option>
+                        <option value="rejected">مرفوض</option>
+                      </select>
+                    </td>
+                    <td className="whitespace-nowrap p-2 text-center text-xs">{new Date(r.createdAt).toLocaleDateString('ar-SA')}</td>
+                    <td className="whitespace-nowrap p-2 text-center"><button onClick={() => handleDeleteOne(r.id)} className="inline-flex min-h-[32px] min-w-[44px] items-center justify-center rounded-full px-3 py-1 text-xs font-bold text-raspberry-600 hover:bg-raspberry-50">حذف</button></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       {detail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setDetail(null)}>
-          <div onClick={(e) => e.stopPropagation()} className="max-h-[90vh] w-full max-w-2xl overflow-auto rounded-2xl bg-white p-6">
-            <div className="flex justify-between">
-              <h2 className="font-display text-lg font-bold">تفاصيل طلب العاملة</h2>
-              <button onClick={() => setDetail(null)} className="text-ink-400">✕</button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-3 backdrop-blur-[1px] sm:p-4" onClick={() => setDetail(null)} role="dialog" aria-modal="true" aria-label="تفاصيل طلب العاملة">
+          <div onClick={(e) => e.stopPropagation()} className="flex max-h-[92vh] max-h-[92dvh] w-full max-w-[92vw] flex-col overflow-hidden rounded-2xl bg-white shadow-xl sm:max-w-2xl">
+            <div className="flex shrink-0 items-center justify-between border-b border-gray-100 px-4 py-4 sm:px-6">
+              <h2 className="font-display text-base font-bold text-ink-800 sm:text-lg">تفاصيل طلب العاملة</h2>
+              <button onClick={() => setDetail(null)} className="inline-flex h-9 w-9 items-center justify-center rounded-full text-ink-400 hover:bg-gray-50 hover:text-ink-600" aria-label="إغلاق">✕</button>
             </div>
-            <div className="mt-6 grid gap-6 text-sm">
-              <section>
-                <h3 className="font-bold text-raspberry-600">البيانات الأساسية</h3>
-                <p className="mt-2"><span className="text-ink-400">الاسم:</span> {detail.fullName}</p>
-                <p><span className="text-ink-400">الجوال:</span> <bdi dir="ltr">{detail.phone}</bdi></p>
-              </section>
-              <section>
-                <h3 className="font-bold text-raspberry-600">بيانات التواصل</h3>
-                <p className="mt-2"><span className="text-ink-400">جهة العمل:</span> {detail.currentEmployer}</p>
-                <p><span className="text-ink-400">طبيعة العمل:</span> {detail.currentRole}</p>
-              </section>
-              <section>
-                <h3 className="font-bold text-raspberry-600">بيانات الطلب</h3>
-                <p className="mt-2"><span className="text-ink-400">سبب الالتحاق:</span> {detail.reasonToJoin}</p>
-                <p><span className="text-ink-400">قائمة حلول الطفولة:</span> {detail.wantsToJoinList === 'yes' ? 'نعم' : 'لا'}</p>
-                <p><span className="text-ink-400">البرامج المستقبلية:</span> {detail.futureTopics}</p>
-              </section>
-              <section>
-                <h3 className="font-bold text-raspberry-600">تاريخ الطلب</h3>
-                <p className="mt-2 text-sm">{new Date(detail.createdAt).toLocaleString('ar-SA')}</p>
-                <p><span className="text-ink-400">الحالة:</span> {detail.status}</p>
-              </section>
+            <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
+              <div className="grid gap-6 text-sm">
+                <section className="min-w-0">
+                  <h3 className="font-bold text-raspberry-600">البيانات الأساسية</h3>
+                  <p className="mt-2 break-words"><span className="text-ink-400">الاسم:</span> {detail.fullName}</p>
+                  <p className="break-words"><span className="text-ink-400">الجوال:</span> <bdi dir="ltr">{detail.phone}</bdi></p>
+                </section>
+                <section className="min-w-0">
+                  <h3 className="font-bold text-raspberry-600">بيانات التواصل</h3>
+                  <p className="mt-2 break-words"><span className="text-ink-400">جهة العمل:</span> {detail.currentEmployer}</p>
+                  <p className="break-words"><span className="text-ink-400">طبيعة العمل:</span> {detail.currentRole}</p>
+                </section>
+                <section className="min-w-0">
+                  <h3 className="font-bold text-raspberry-600">بيانات الطلب</h3>
+                  <p className="mt-2 break-words"><span className="text-ink-400">سبب الالتحاق:</span> {detail.reasonToJoin}</p>
+                  <p className="break-words"><span className="text-ink-400">قائمة حلول الطفولة:</span> {detail.wantsToJoinList === 'yes' ? 'نعم' : 'لا'}</p>
+                  <p className="break-words"><span className="text-ink-400">البرامج المستقبلية:</span> {detail.futureTopics}</p>
+                </section>
+                <section className="min-w-0">
+                  <h3 className="font-bold text-raspberry-600">تاريخ الطلب</h3>
+                  <p className="mt-2 break-words text-sm">{new Date(detail.createdAt).toLocaleString('ar-SA')}</p>
+                  <p className="break-words"><span className="text-ink-400">الحالة:</span> {detail.status}</p>
+                </section>
+              </div>
             </div>
           </div>
         </div>

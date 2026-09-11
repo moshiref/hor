@@ -133,15 +133,15 @@ export default function ImageUploader({ label, description, value, storageKey, s
   const displayAspect = aspect ?? (spec.aspect ? `aspect-[${spec.aspect}]` : 'aspect-[16/9]')
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <p className="flex items-center gap-2 text-sm font-bold text-ink-800">
-            <span className="rounded-full bg-ink-800 px-2 py-0.5 text-[10px] font-bold text-white">{spec.label}</span>
-            {label}
+    <div className="min-w-0 space-y-3">
+      <div className="flex min-w-0 items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <p className="flex min-w-0 flex-wrap items-center gap-2 break-words text-sm font-bold text-ink-800">
+            <span className="shrink-0 rounded-full bg-ink-800 px-2 py-0.5 text-[10px] font-bold text-white">{spec.label}</span>
+            <span className="break-words">{label}</span>
           </p>
-          {description && <p className="mt-1 text-xs leading-relaxed text-gray-500">{description}</p>}
-          <p className="mt-1 flex flex-wrap gap-2 text-[11px] text-gray-400">
+          {description && <p className="mt-1 break-words text-xs leading-relaxed text-gray-500">{description}</p>}
+          <p className="mt-1 flex flex-wrap gap-2 break-words text-[11px] text-gray-400">
             <span className="inline-flex items-center gap-1 rounded-full bg-cream-100 px-2 py-0.5">
               <Crop size={10} />
               {spec.aspect ? `نسبة ${spec.aspect.toFixed(2)} (${spec.targetWidth}×${spec.targetHeight})` : 'أبعاد حرة'}
@@ -153,7 +153,7 @@ export default function ImageUploader({ label, description, value, storageKey, s
           </p>
         </div>
         {value && !uploading && (
-          <button type="button" onClick={handleDelete} className="shrink-0 inline-flex items-center gap-1 rounded-full border border-raspberry-200 bg-raspberry-50 px-3 py-1 text-xs font-bold text-raspberry-600 hover:bg-raspberry-100">
+          <button type="button" onClick={handleDelete} className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full border border-raspberry-200 bg-raspberry-50 px-3 py-1 text-xs font-bold text-raspberry-600 transition-colors hover:bg-raspberry-100">
             <Trash2 size={12} />
             حذف
           </button>
@@ -200,7 +200,7 @@ export default function ImageUploader({ label, description, value, storageKey, s
           onDragLeave={() => setDragOver(false)}
           onDrop={onDrop}
           onClick={() => inputRef.current?.click()}
-          className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed bg-cream-50 px-6 py-8 text-center transition-colors ${dragOver ? 'border-raspberry-300 bg-raspberry-50' : 'border-gray-200 hover:border-gray-300 hover:bg-white'} ${displayAspect}`}
+          className={`flex min-w-0 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed bg-cream-50 px-4 py-6 text-center transition-colors sm:px-6 sm:py-8 ${dragOver ? 'border-raspberry-300 bg-raspberry-50' : 'border-gray-200 hover:border-gray-300 hover:bg-white'} ${displayAspect}`}
           style={spec.aspect ? aspectStyle : undefined}
         >
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm">
@@ -232,18 +232,18 @@ export default function ImageUploader({ label, description, value, storageKey, s
 
       <input ref={inputRef} type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" className="hidden" onChange={onPick} />
 
-      {/* Crop Modal */}
+      {/* Crop Modal — responsive: 92vw on mobile */}
       {showCrop && pendingUrl && pendingDim && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-xl rounded-3xl bg-white p-6 shadow-xl">
-            <div className="flex items-center justify-between">
-              <h3 className="font-display text-base font-bold text-ink-800">معالجة الصورة — {spec.label}</h3>
-              <button onClick={handleCancelCrop} className="rounded-full p-1.5 hover:bg-gray-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm sm:p-4" role="dialog" aria-modal="true" aria-label="معالجة الصورة">
+          <div className="flex max-h-[92vh] max-h-[92dvh] w-full max-w-[92vw] flex-col overflow-hidden rounded-2xl bg-white shadow-xl sm:max-w-xl sm:rounded-3xl">
+            <div className="flex shrink-0 items-center justify-between border-b border-gray-100 px-4 py-4 sm:px-6">
+              <h3 className="break-words font-display text-sm font-bold text-ink-800 sm:text-base">معالجة الصورة — {spec.label}</h3>
+              <button onClick={handleCancelCrop} className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full hover:bg-gray-100" aria-label="إغلاق">
                 <X size={18} />
               </button>
             </div>
-
-            <div className="mt-4 overflow-hidden rounded-2xl border border-gray-200 bg-cream-50" style={spec.aspect ? aspectStyle : undefined}>
+            <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
+            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-cream-50" style={spec.aspect ? aspectStyle : undefined}>
               <div className="relative flex items-center justify-center p-2" style={spec.aspect ? { aspectRatio: String(spec.aspect) } : undefined}>
                 <img
                   src={pendingUrl}
@@ -294,6 +294,7 @@ export default function ImageUploader({ label, description, value, storageKey, s
 
             <p className="mt-3 text-center text-[11px] text-gray-400">سيتم ضغط الصورة تلقائياً للحفاظ على جودة جيدة وسرعة تحميل عالية — Responsive على Mobile و Desktop</p>
           </div>
+        </div>
         </div>
       )}
     </div>

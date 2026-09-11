@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard,
@@ -12,10 +12,12 @@ import {
   ChevronLeft,
   Home,
   Images,
+  Briefcase,
 } from 'lucide-react'
 import { useAuth } from '@/admin/auth'
 import { getSiteConfig } from '@/lib/siteStore'
 import { useImageUrl } from '@/hooks/useImageUrl'
+import { useScrollLock } from '@/hooks/useScrollLock'
 
 const navGroups = [
   {
@@ -29,6 +31,7 @@ const navGroups = [
   {
     title: 'الطلبات',
     items: [
+      { to: '/admin/applications', label: 'طلبات التقديم', icon: Briefcase },
       { to: '/admin/students', label: 'طلبات الطلاب', icon: GraduationCap },
       { to: '/admin/staff', label: 'طلبات العاملات', icon: UsersRound },
     ],
@@ -44,6 +47,7 @@ const navGroups = [
 
 const breadcrumbMap: Record<string, string> = {
   '/admin': 'لوحة التحكم',
+  '/admin/applications': 'طلبات التقديم',
   '/admin/students': 'طلبات الطلاب',
   '/admin/staff': 'طلبات العاملات',
   '/admin/reports': 'التقارير',
@@ -57,6 +61,39 @@ export default function AdminLayout() {
   const nav = useNavigate()
   const loc = useLocation()
   const site = getSiteConfig()
+  const [newAppCount, setNewAppCount] = useState(0)
+
+  useScrollLock(open)
+
+  // Badge: count new caregiver applications
+  useEffect(() => {
+    const calc = () => {
+      try {
+        const raw = localStorage.getItem('hor_staff_applications')
+        const arr = raw ? (JSON.parse(raw) as { status: string }[]) : []
+        setNewAppCount(arr.filter((r) => r.status === 'new').length)
+      } catch {
+        setNewAppCount(0)
+      }
+    }
+    calc()
+    window.addEventListener('storage', calc)
+    const id = setInterval(calc, 2000)
+    return () => {
+      window.removeEventListener('storage', calc)
+      clearInterval(id)
+    }
+  }, [loc.pathname])
+
+  // Close on Escape and on route change
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+  useEffect(() => setOpen(false), [loc.pathname])
 
   const handleLogout = () => {
     logout()
@@ -67,23 +104,25 @@ export default function AdminLayout() {
   const currentLabel = breadcrumbMap[loc.pathname] ?? 'لوحة التحكم'
 
   return (
-    <div className="min-h-screen bg-[#F8F9FB]" dir="rtl">
-      {/* Sidebar */}
+    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-[#F8F9FB]" dir="rtl">
+      {/* Sidebar — responsive: 88vw on mobile (85-92vw spec), fixed 280px on desktop */}
       <aside
-        className={`fixed inset-y-0 right-0 z-40 flex w-[280px] flex-col border-l border-gray-200 bg-white transition-transform duration-300 lg:translate-x-0 ${open ? 'translate-x-0' : 'translate-x-full'}`}
+        aria-label="القائمة الجانبية"
+        aria-hidden={!open && typeof window !== 'undefined' && window.innerWidth < 1024 ? true : undefined}
+        className={`fixed inset-y-0 right-0 z-40 flex w-[88vw] max-w-[300px] flex-col border-l border-gray-200 bg-white shadow-xl transition-transform duration-300 ease-out will-change-transform lg:w-[280px] lg:max-w-none lg:shadow-none lg:translate-x-0 ${open ? 'translate-x-0' : 'translate-x-full'}`}
       >
         {/* Logo */}
-        <div className="flex h-[64px] items-center gap-3 border-b border-gray-100 px-6">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-raspberry-50">
+        <div className="flex h-[56px] min-h-[56px] items-center gap-3 border-b border-gray-100 px-4 sm:h-[64px] sm:px-6">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-raspberry-50">
             <img src={logoUrl} alt="" className="h-7 w-7 object-contain" />
           </div>
-          <div>
-            <p className="font-display text-[13px] font-bold leading-none text-ink-800">{site.shortName}</p>
-            <p className="text-[11px] font-medium text-ink-400">لوحة التحكم</p>
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-display text-[13px] font-bold leading-none text-ink-800">{site.shortName}</p>
+            <p className="truncate text-[11px] font-medium text-ink-400">لوحة التحكم</p>
           </div>
           <button
             onClick={() => setOpen(false)}
-            className="ms-auto rounded-lg p-1.5 text-gray-400 hover:bg-gray-50 lg:hidden"
+            className="ms-auto inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raspberry-500 lg:hidden"
             aria-label="إغلاق القائمة"
           >
             <X size={18} />
@@ -113,7 +152,10 @@ export default function AdminLayout() {
                     }
                   >
                     <Icon size={18} className="shrink-0 opacity-80" />
-                    {label}
+                    <span className="flex-1 truncate">{label}</span>
+                    {to === '/admin/applications' && newAppCount > 0 && (
+                      <span className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-raspberry-500 px-1.5 text-[11px] font-bold leading-none text-white shadow-sm">{newAppCount > 99 ? '99+' : newAppCount}</span>
+                    )}
                   </NavLink>
                 )
               })}
@@ -144,47 +186,59 @@ export default function AdminLayout() {
       </aside>
 
       {/* Overlay */}
-      {open && <button aria-label="إغلاق الخلفية" onClick={() => setOpen(false)} className="fixed inset-0 z-30 bg-black/30 backdrop-blur-[1px] lg:hidden" />}
+      {open && (
+        <button
+          aria-label="إغلاق القائمة"
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 z-30 bg-black/35 backdrop-blur-[2px] lg:hidden"
+          tabIndex={-1}
+        />
+      )}
 
       {/* Main */}
-      <div className="lg:ms-[280px]">
+      <div className="flex min-h-screen min-w-0 flex-col lg:ms-[280px]">
         {/* Topbar */}
-        <header className="sticky top-0 z-20 flex h-[64px] items-center gap-4 border-b border-gray-200 bg-white/80 px-4 backdrop-blur sm:px-6">
+        <header className="sticky top-0 z-20 flex h-[56px] min-h-[56px] flex-wrap items-center gap-2 border-b border-gray-200 bg-white/85 px-3 backdrop-blur supports-[backdrop-filter]:bg-white/75 sm:h-[64px] sm:flex-nowrap sm:gap-4 sm:px-4 lg:px-6">
           <button
             onClick={() => setOpen((v) => !v)}
-            className="rounded-xl border border-gray-200 bg-white p-2.5 text-ink-700 shadow-sm hover:bg-gray-50 lg:hidden"
-            aria-label="فتح القائمة"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-ink-700 shadow-sm transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raspberry-500 lg:hidden"
+            aria-label={open ? 'إغلاق القائمة' : 'فتح القائمة'}
+            aria-expanded={open}
+            aria-controls="admin-sidebar"
           >
-            <Menu size={18} />
+            {open ? <X size={18} /> : <Menu size={18} />}
           </button>
 
-          <nav aria-label="مسار التنقل" className="hidden items-center gap-1.5 text-xs sm:flex">
-            <NavLink to="/" className="flex items-center gap-1 text-gray-400 hover:text-ink-600">
+          <nav aria-label="مسار التنقل" className="hidden min-w-0 items-center gap-1.5 text-xs sm:flex">
+            <NavLink to="/" className="flex shrink-0 items-center gap-1 text-gray-400 hover:text-ink-600">
               <Home size={14} />
               الموقع
             </NavLink>
-            <ChevronLeft size={12} className="text-gray-300" />
-            <span className="font-bold text-ink-800">{currentLabel}</span>
+            <ChevronLeft size={12} className="shrink-0 text-gray-300" />
+            <span className="truncate font-bold text-ink-800">{currentLabel}</span>
           </nav>
-          <span className="font-bold text-ink-800 sm:hidden">{currentLabel}</span>
+          <span className="min-w-0 flex-1 truncate text-sm font-bold text-ink-800 sm:hidden">{currentLabel}</span>
 
-          <div className="ms-auto flex items-center gap-2">
+          <div className="ms-auto flex shrink-0 items-center gap-2">
             <div className="hidden items-center gap-2 rounded-full border border-teal-100 bg-teal-50 px-3 py-1.5 sm:flex">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-teal-600" />
+              <span className="h-2 w-2 animate-pulse rounded-full bg-teal-600" aria-hidden />
               <span className="text-xs font-bold text-teal-700">النظام نشط</span>
             </div>
             <a
               href="/"
               target="_blank"
-              className="hidden rounded-full border border-gray-200 px-4 py-2 text-xs font-bold text-ink-700 hover:bg-gray-50 sm:inline-flex"
+              rel="noopener noreferrer"
+              className="hidden shrink-0 rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-bold text-ink-700 transition-colors hover:bg-gray-50 sm:inline-flex"
             >
               معاينة الموقع
             </a>
           </div>
         </header>
 
-        <main className="p-4 sm:p-6 lg:p-8">
-          <Outlet />
+        <main className="min-w-0 flex-1 overflow-x-hidden p-3 sm:p-5 md:p-6 lg:p-8">
+          <div className="mx-auto w-full max-w-[1400px] min-w-0">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

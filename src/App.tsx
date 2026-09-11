@@ -23,6 +23,7 @@ import { getSections, hydrateCmsFromSupabase } from '@/lib/siteStore'
 const Dashboard = lazy(() => import('@/admin/pages/Dashboard'))
 const Students = lazy(() => import('@/admin/pages/Students'))
 const Staff = lazy(() => import('@/admin/pages/Staff'))
+const Applications = lazy(() => import('@/admin/pages/Applications'))
 const Reports = lazy(() => import('@/admin/pages/Reports'))
 const Settings = lazy(() => import('@/admin/pages/Settings'))
 const MediaLibrary = lazy(() => import('@/admin/pages/MediaLibrary'))
@@ -100,6 +101,14 @@ export default function App() {
           element={
             <Suspense fallback={<div className="p-8 text-center">جارٍ التحميل...</div>}>
               <Staff />
+            </Suspense>
+          }
+        />
+        <Route
+          path="applications"
+          element={
+            <Suspense fallback={<div className="p-8 text-center">جارٍ التحميل...</div>}>
+              <Applications />
             </Suspense>
           }
         />

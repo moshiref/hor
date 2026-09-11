@@ -55,13 +55,13 @@ export default function MediaLibrary() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-bold text-ink-800">مكتبة الوسائط</h1>
-        <p className="mt-1 text-sm text-gray-500">كل الصور المرفوعة من الجهاز — تُخزن فعلياً في IndexedDB وتظهر مباشرة في الموقع</p>
+    <div className="min-w-0 space-y-4 sm:space-y-6">
+      <div className="min-w-0">
+        <h1 className="break-words font-display text-xl font-bold text-ink-800 sm:text-2xl">مكتبة الوسائط</h1>
+        <p className="mt-1 break-words text-sm text-gray-500">كل الصور المرفوعة من الجهاز — تُخزن فعلياً في IndexedDB وتظهر مباشرة في الموقع</p>
       </div>
 
-      <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center">
+      <div className="min-w-0 rounded-2xl border-2 border-dashed border-gray-200 bg-white p-5 text-center sm:p-8">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-cream-100">
           <Upload size={24} className="text-ink-600" />
         </div>
@@ -76,13 +76,13 @@ export default function MediaLibrary() {
       </div>
 
       {keys.length === 0 ? (
-        <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center">
+        <div className="min-w-0 rounded-2xl border border-gray-200 bg-white p-8 text-center sm:p-12">
           <ImageIcon size={32} className="mx-auto text-gray-300" />
           <p className="mt-3 text-sm font-bold text-ink-700">لا توجد صور بعد</p>
-          <p className="mt-1 text-xs text-gray-500">ارفع أول صورة لتظهر هنا ويمكنك اختيارها في أي مكان بالموقع</p>
+          <p className="mt-1 break-words text-xs text-gray-500">ارفع أول صورة لتظهر هنا ويمكنك اختيارها في أي مكان بالموقع</p>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid min-w-0 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
           {keys.map((key) => (
             <div key={key} className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
               <div className="aspect-[4/3] bg-cream-50">

@@ -26,6 +26,7 @@ export interface ApplicationsService {
   listStaff(filters?: ApplicationFilters, pagination?: PaginationParams): Promise<ListResult<StaffApplication>>
   getStaff(id: string): Promise<ApiResponse<StaffApplication>>
   updateStaffStatus(id: string, status: StaffApplication['status']): Promise<ApiResponse<StaffApplication>>
+  updateStaff(id: string, patch: Partial<Pick<StaffApplication, 'status' | 'notesInternal'>>): Promise<ApiResponse<StaffApplication>>
   deleteStaff(ids: string[]): Promise<void>
 }
 
@@ -216,6 +217,40 @@ export const mockApplicationsService: ApplicationsService = {
     const idx = all.findIndex((r) => r.id === id)
     if (idx === -1) throw new Error('الطلب غير موجود')
     all[idx] = { ...all[idx], status, updatedAt: new Date().toISOString() }
+    writeStaff(all)
+    return { data: all[idx] }
+  },
+
+  async updateStaff(id, patch) {
+    const now = new Date().toISOString()
+    try {
+      const { hasSupabase, supabase } = await import('@/lib/supabase')
+      if (hasSupabase() && supabase) {
+        const all = readStaff()
+        const rec = all.find((r) => r.id === id)
+        if (rec) {
+          const updated = { ...rec, ...patch, updatedAt: now } as StaffApplication
+          const { error } = await supabase.from('staff_applications').update({ data: updated } as never).eq('id', id)
+          if (!error) {
+            const idx2 = all.findIndex((r) => r.id === id)
+            if (idx2 !== -1) {
+              all[idx2] = updated
+              writeStaff(all)
+              return { data: updated }
+            }
+          }
+        }
+      }
+    } catch {
+      // fallback
+    }
+    const all = readStaff()
+    const idx = all.findIndex((r) => r.id === id)
+    if (idx === -1) throw new Error('الطلب غير موجود')
+    all[idx] = { ...all[idx], ...patch, updatedAt: now } as StaffApplication
+    if (patch.status) {
+      ;(all[idx] as StaffApplication).reviewedAt = now
+    }
     writeStaff(all)
     return { data: all[idx] }
   },

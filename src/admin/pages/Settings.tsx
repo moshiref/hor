@@ -5,17 +5,17 @@ import ImageUploader from '@/components/admin/ImageUploader'
 
 function Card({ title, desc, icon: Icon, children }: { title: string; desc: string; icon: React.ElementType; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white shadow-sm">
-      <div className="flex items-start gap-3 border-b border-gray-100 px-6 py-5">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cream-100 text-ink-700">
+    <section className="min-w-0 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="flex min-w-0 items-start gap-3 border-b border-gray-100 px-4 py-4 sm:px-6 sm:py-5">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cream-100 text-ink-700">
           <Icon size={18} />
         </div>
-        <div>
-          <h2 className="text-sm font-bold text-ink-800">{title}</h2>
-          <p className="mt-1 text-xs leading-relaxed text-gray-500">{desc}</p>
+        <div className="min-w-0 flex-1">
+          <h2 className="break-words text-sm font-bold text-ink-800">{title}</h2>
+          <p className="mt-1 break-words text-xs leading-relaxed text-gray-500">{desc}</p>
         </div>
       </div>
-      <div className="p-6">{children}</div>
+      <div className="min-w-0 p-4 sm:p-6">{children}</div>
     </section>
   )
 }
@@ -63,15 +63,15 @@ export default function Settings() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 pb-24">
-      <div>
-        <h1 className="font-display text-2xl font-bold text-ink-800">إعدادات الموقع — CMS شامل</h1>
-        <p className="mt-1 text-sm text-gray-500">كل ما يظهر للزائر قابل للتحكم هنا بدون تعديل الكود</p>
+    <div className="mx-auto w-full max-w-5xl min-w-0 space-y-4 pb-24 sm:space-y-6">
+      <div className="min-w-0">
+        <h1 className="break-words font-display text-xl font-bold leading-tight text-ink-800 sm:text-2xl">إعدادات الموقع — CMS شامل</h1>
+        <p className="mt-1 break-words text-sm text-gray-500">كل ما يظهر للزائر قابل للتحكم هنا بدون تعديل الكود</p>
       </div>
 
       {/* Header / Nav */}
       <Card title="الشريط العلوي — Header" desc="الشعار واسم المركز والقائمة وزر التسجيل" icon={Layout}>
-        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="grid gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="flex flex-col gap-1.5">
@@ -102,10 +102,10 @@ export default function Settings() {
               <p className="text-xs font-bold">عناصر القائمة</p>
               <div className="mt-3 space-y-2">
                 {content.navigation.map((item, idx) => (
-                  <div key={item.href + idx} className="flex items-center gap-2 rounded-xl border border-gray-100 bg-cream-50 px-3 py-2">
-                    <Menu size={14} className="text-gray-400" />
-                    <input value={item.label} onChange={(e) => { const n = [...content.navigation]; n[idx] = { ...n[idx], label: e.target.value }; setContent({ ...content, navigation: n }) }} className="flex-1 rounded-lg border border-gray-200 px-2 py-1.5 text-xs" />
-                    <input value={item.href} onChange={(e) => { const n = [...content.navigation]; n[idx] = { ...n[idx], href: e.target.value }; setContent({ ...content, navigation: n }) }} className="w-28 rounded-lg border border-gray-200 px-2 py-1.5 text-xs" dir="ltr" />
+                  <div key={item.href + idx} className="flex min-w-0 flex-wrap items-center gap-2 rounded-xl border border-gray-100 bg-cream-50 px-3 py-2 sm:flex-nowrap">
+                    <Menu size={14} className="shrink-0 text-gray-400" />
+                    <input value={item.label} onChange={(e) => { const n = [...content.navigation]; n[idx] = { ...n[idx], label: e.target.value }; setContent({ ...content, navigation: n }) }} className="min-w-0 flex-1 rounded-lg border border-gray-200 px-2 py-1.5 text-xs" />
+                    <input value={item.href} onChange={(e) => { const n = [...content.navigation]; n[idx] = { ...n[idx], href: e.target.value }; setContent({ ...content, navigation: n }) }} className="min-w-0 w-full rounded-lg border border-gray-200 px-2 py-1.5 text-xs min-[380px]:w-28" dir="ltr" />
                     <button onClick={() => { const n = [...content.navigation]; n[idx] = { ...n[idx], isVisible: !n[idx].isVisible }; setContent({ ...content, navigation: n }) }} className={`rounded-full p-1.5 ${item.isVisible ? 'bg-teal-50 text-teal-600' : 'bg-gray-100 text-gray-400'}`}>{item.isVisible ? <Eye size={14} /> : <EyeOff size={14} />}</button>
                     <button onClick={() => { if (!confirm('حذف العنصر؟')) return; setContent({ ...content, navigation: content.navigation.filter((_, i) => i !== idx) }) }} className="rounded-full p-1.5 text-raspberry-600 hover:bg-raspberry-50"><Trash2 size={14} /></button>
                   </div>
@@ -119,7 +119,7 @@ export default function Settings() {
       </Card>
 
       <Card title="الصفحة الرئيسية — Hero" desc="القسم الأول الذي يراه الزائر" icon={ImageIcon}>
-        <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+        <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
           <div className="space-y-4">
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-bold">النص الصغير فوق العنوان</span>
@@ -155,11 +155,11 @@ export default function Settings() {
       </Card>
 
       <Card title="عن المركز" desc="العنوان والفقرات والمميزات" icon={Info}>
-        <label className="flex flex-col gap-1.5">
+        <label className="flex min-w-0 flex-col gap-1.5">
           <span className="text-xs font-bold">عنوان القسم</span>
-          <input value={content.about.title} onChange={(e) => setContent({ ...content, about: { ...content.about, title: e.target.value } })} className="rounded-xl border border-gray-200 px-4 py-3 text-sm font-bold" />
+          <input value={content.about.title} onChange={(e) => setContent({ ...content, about: { ...content.about, title: e.target.value } })} className="min-w-0 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm font-bold" />
         </label>
-        <textarea value={content.about.paragraphs.join('\n\n')} onChange={(e) => setContent({ ...content, about: { ...content.about, paragraphs: e.target.value.split('\n\n') } })} className="mt-4 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm leading-relaxed" rows={5} />
+        <textarea value={content.about.paragraphs.join('\n\n')} onChange={(e) => setContent({ ...content, about: { ...content.about, paragraphs: e.target.value.split('\n\n') } })} className="mt-4 min-w-0 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm leading-relaxed" rows={5} />
         <div className="mt-6">
           <p className="text-xs font-bold">المميزات (إضافة/حذف/ترتيب/إظهار)</p>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -296,9 +296,9 @@ export default function Settings() {
           <p className="text-xs font-bold">روابط سريعة</p>
           <div className="mt-2 space-y-2">
             {content.footer.links.map((l, idx) => (
-              <div key={l.href + idx} className="flex items-center gap-2 rounded-xl border border-gray-100 bg-cream-50 px-3 py-2">
-                <input value={l.label} onChange={(e) => { const n = [...content.footer.links]; n[idx] = { ...n[idx], label: e.target.value }; setContent({ ...content, footer: { ...content.footer, links: n } }) }} className="flex-1 rounded-lg border border-gray-200 px-3 py-1.5 text-xs" />
-                <input value={l.href} onChange={(e) => { const n = [...content.footer.links]; n[idx] = { ...n[idx], href: e.target.value }; setContent({ ...content, footer: { ...content.footer, links: n } }) }} className="w-32 rounded-lg border border-gray-200 px-3 py-1.5 text-xs" dir="ltr" />
+              <div key={l.href + idx} className="flex min-w-0 flex-wrap items-center gap-2 rounded-xl border border-gray-100 bg-cream-50 px-3 py-2 sm:flex-nowrap">
+                <input value={l.label} onChange={(e) => { const n = [...content.footer.links]; n[idx] = { ...n[idx], label: e.target.value }; setContent({ ...content, footer: { ...content.footer, links: n } }) }} className="min-w-0 flex-1 rounded-lg border border-gray-200 px-3 py-1.5 text-xs" />
+                <input value={l.href} onChange={(e) => { const n = [...content.footer.links]; n[idx] = { ...n[idx], href: e.target.value }; setContent({ ...content, footer: { ...content.footer, links: n } }) }} className="min-w-0 w-full rounded-lg border border-gray-200 px-3 py-1.5 text-xs min-[380px]:w-32" dir="ltr" />
                 <button onClick={() => { const n = [...content.footer.links]; n[idx] = { ...n[idx], isVisible: !n[idx].isVisible }; setContent({ ...content, footer: { ...content.footer, links: n } }) }} className={`rounded-full p-1.5 ${l.isVisible ? 'bg-teal-50 text-teal-600' : 'bg-gray-100'}`}>{l.isVisible ? <Eye size={12} /> : <EyeOff size={12} />}</button>
                 <button onClick={() => setContent({ ...content, footer: { ...content.footer, links: content.footer.links.filter((_, i) => i !== idx) } })} className="rounded-full p-1.5 text-raspberry-600 hover:bg-raspberry-50"><Trash2 size={12} /></button>
               </div>
@@ -396,13 +396,13 @@ export default function Settings() {
         </div>
       </Card>
 
-      {/* Sticky save bar */}
-      <div className={`sticky bottom-4 z-10 flex items-center justify-between rounded-2xl border bg-white px-6 py-4 shadow-lg transition-all ${isDirty ? 'border-amber-200 opacity-100' : 'pointer-events-none border-transparent opacity-0'}`}>
-        <div className="flex items-center gap-2 text-sm">
-          <AlertCircle size={16} className="text-amber-500" />
-          <span className="font-medium">لديك تغييرات غير محفوظة</span>
+      {/* Sticky save bar — responsive: stack on mobile */}
+      <div className={`sticky bottom-4 z-10 flex min-w-0 flex-col gap-3 rounded-2xl border bg-white p-4 shadow-lg transition-all sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4 ${isDirty ? 'border-amber-200 opacity-100' : 'pointer-events-none border-transparent opacity-0'}`}>
+        <div className="flex min-w-0 items-center gap-2 text-sm">
+          <AlertCircle size={16} className="shrink-0 text-amber-500" />
+          <span className="break-words font-medium">لديك تغييرات غير محفوظة</span>
         </div>
-        <button onClick={saveAll} disabled={saving} className="inline-flex items-center gap-2 rounded-full bg-ink-800 px-6 py-2.5 text-sm font-bold text-white disabled:opacity-50">
+        <button onClick={saveAll} disabled={saving} className="inline-flex min-h-[42px] shrink-0 items-center justify-center gap-2 rounded-full bg-ink-800 px-6 py-2.5 text-sm font-bold text-white disabled:opacity-50">
           {saving ? 'جارٍ الحفظ...' : (
             <>
               <Save size={16} /> حفظ التغييرات

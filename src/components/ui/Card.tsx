@@ -7,8 +7,8 @@ type Props = HTMLAttributes<HTMLDivElement> & {
 }
 
 /**
- * Card — reusable surface for features, programs, stats.
- * Consistent border, radius, shadow.
+ * Card — premium surface with layered depth.
+ * Hover: subtle lift + tinted shadow + border highlight.
  */
 export function Card({ padding = 'md', hover = false, className, children, ...props }: Props) {
   const paddings = {
@@ -20,14 +20,15 @@ export function Card({ padding = 'md', hover = false, className, children, ...pr
   return (
     <div
       className={cn(
-        'card-luxury rounded-2xl border border-ink-100 bg-white shadow-card',
+        'card-luxury group relative rounded-2xl border border-ink-100 bg-white shadow-card overflow-hidden',
+        'before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:bg-gradient-to-br before:from-white/60 before:to-transparent before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100',
         paddings[padding],
-        hover && 'hover:shadow-md',
+        hover && 'hover:shadow-[0_16px_36px_rgba(23,35,60,0.10),0_4px_14px_rgba(23,35,60,0.06)]',
         className,
       )}
       {...props}
     >
-      {children}
+      <div className="relative z-10">{children}</div>
     </div>
   )
 }

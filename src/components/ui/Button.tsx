@@ -30,13 +30,13 @@ export function Button({
   ...props
 }: Props) {
   const base =
-    'inline-flex items-center justify-center rounded-full font-bold transition-all duration-300 will-change-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none hover:-translate-y-0.5 active:translate-y-0'
+    'group/btn relative inline-flex items-center justify-center overflow-hidden rounded-full font-bold transition-all duration-300 will-change-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]'
 
   const variants: Record<ButtonVariant, string> = {
     primary:
-      'bg-raspberry-500 text-white shadow-[0_6px_16px_rgba(196,28,99,0.24)] hover:bg-raspberry-600 hover:shadow-[0_10px_24px_rgba(196,28,99,0.30)] focus-visible:outline-raspberry-700',
+      'bg-raspberry-500 text-white shadow-[0_6px_16px_rgba(196,28,99,0.24)] hover:bg-raspberry-600 hover:shadow-[0_10px_28px_rgba(196,28,99,0.30)] focus-visible:outline-raspberry-700 before:absolute before:inset-0 before:translate-x-[-100%] before:bg-gradient-to-r before:from-transparent before:via-white/15 before:to-transparent before:transition-transform before:duration-700 hover:before:translate-x-[100%]',
     secondary:
-      'border-2 border-ink-700 text-ink-700 hover:bg-ink-700 hover:text-white hover:shadow-md focus-visible:outline-ink-700',
+      'border-2 border-ink-700 text-ink-700 hover:bg-ink-700 hover:text-white hover:shadow-[0_8px_20px_rgba(23,35,60,0.12)] focus-visible:outline-ink-700',
     ghost: 'text-ink-600 hover:text-raspberry-600 hover:bg-ink-50 focus-visible:outline-raspberry-500',
   }
 
@@ -83,13 +83,13 @@ export function ButtonLink({
   size?: ButtonSize
 }) {
   const base =
-    'inline-flex items-center justify-center rounded-full font-bold transition-all duration-300 will-change-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 hover:-translate-y-0.5 active:translate-y-0'
+    'group/btn relative inline-flex items-center justify-center overflow-hidden rounded-full font-bold transition-all duration-300 will-change-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]'
 
   const variants: Record<ButtonVariant, string> = {
     primary:
-      'bg-raspberry-500 text-white shadow-[0_6px_16px_rgba(196,28,99,0.24)] hover:bg-raspberry-600 hover:shadow-[0_10px_24px_rgba(196,28,99,0.30)] focus-visible:outline-raspberry-700',
+      'bg-raspberry-500 text-white shadow-[0_6px_16px_rgba(196,28,99,0.24)] hover:bg-raspberry-600 hover:shadow-[0_10px_28px_rgba(196,28,99,0.30)] focus-visible:outline-raspberry-700 before:absolute before:inset-0 before:translate-x-[-100%] before:bg-gradient-to-r before:from-transparent before:via-white/15 before:to-transparent before:transition-transform before:duration-700 hover:before:translate-x-[100%]',
     secondary:
-      'border-2 border-ink-700 text-ink-700 hover:bg-ink-700 hover:text-white hover:shadow-md focus-visible:outline-ink-700',
+      'border-2 border-ink-700 text-ink-700 hover:bg-ink-700 hover:text-white hover:shadow-[0_8px_20px_rgba(23,35,60,0.12)] focus-visible:outline-ink-700',
     ghost: 'text-ink-600 hover:text-raspberry-600 hover:bg-ink-50 focus-visible:outline-raspberry-500',
   }
 

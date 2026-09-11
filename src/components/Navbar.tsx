@@ -33,10 +33,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
         isScrolled
-          ? 'bg-cream-50/95 shadow-[0_1px_0_0_rgba(23,35,60,0.08),0_4px_24px_rgba(23,35,60,0.06)] backdrop-blur-xl'
-          : 'bg-cream-50/70 backdrop-blur-md'
+          ? 'border-ink-100/70 bg-cream-50/92 shadow-[0_1px_0_0_rgba(23,35,60,0.06),0_8px_28px_rgba(23,35,60,0.07)] backdrop-blur-xl supports-[backdrop-filter]:bg-cream-50/80'
+          : 'border-transparent bg-cream-50/60 backdrop-blur-md'
       }`}
     >
       <Container>
@@ -64,14 +64,14 @@ export default function Navbar() {
             </span>
           </a>
 
-          {/* Desktop nav */}
-          <ul className="hidden items-center gap-1 lg:flex">
+          {/* Desktop nav — premium hover */}
+          <ul className="hidden items-center gap-0.5 lg:flex">
             {visibleLinks.map((link) => (
               <li key={link.href}>
                 <a
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className="rounded-md px-3.5 py-2 text-[0.92rem] font-medium text-ink-600 transition-colors hover:text-raspberry-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raspberry-500"
+                  className="relative rounded-full px-3.5 py-2 text-[0.92rem] font-medium text-ink-600 transition-all duration-200 hover:bg-white hover:text-ink-800 hover:shadow-sm hover:ring-1 hover:ring-ink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raspberry-500"
                 >
                   {link.label}
                 </a>

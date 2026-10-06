@@ -1,4 +1,5 @@
 import type { AboutContent, HeroContent, Program } from '@/types/content'
+import type { ActivityItem } from '@/types/cms'
 
 /**
  * Editable page content — decoupled from presentation.
@@ -191,3 +192,25 @@ export const scheduleContent = {
     { id: 'transport', title: 'تتوفر خدمة المواصلات', description: 'خدمة آمنة لتسهيل وصول طفلك دون عناء.' },
   ],
 }
+
+/**
+ * Demo activities — royalty-free clips from Mixkit (free for commercial use).
+ * Shown only while no activities have been added from the dashboard,
+ * so the section never looks empty. Replace with the center's own media.
+ */
+const mixkit = (id: number) => ({
+  image: `https://assets.mixkit.co/videos/${id}/${id}-thumb-720-0.jpg`,
+  video: `https://assets.mixkit.co/videos/${id}/${id}-720.mp4`,
+  videoPreview: `https://assets.mixkit.co/videos/${id}/${id}-360.mp4`,
+})
+
+const demoStamp = '2026-01-01T00:00:00.000Z'
+
+export const demoActivities: ActivityItem[] = [
+  { id: 'demo-reading', title: 'ركن القصص والقراءة', description: 'جلسات قصصية يومية تنمّي الخيال وحب القراءة والإنصات.', ...mixkit(36016) },
+  { id: 'demo-art', title: 'الرسم والفنون', description: 'تعبير حر بالألوان يطلق إبداع الطفل وينمّي مهاراته الدقيقة.', ...mixkit(28230) },
+  { id: 'demo-learning', title: 'التعلّم باللعب', description: 'أنشطة تفاعلية مع المعلمة تجعل التعلّم ممتعاً وقريباً من الطفل.', ...mixkit(3469) },
+  { id: 'demo-finger', title: 'الرسم بالأصابع', description: 'تجارب حسية ملوّنة تقوّي التآزر بين اليد والعين.', ...mixkit(15163) },
+  { id: 'demo-building', title: 'ألعاب البناء والتركيب', description: 'مكعبات وتركيب تنمّي التفكير والتخطيط وحل المشكلات.', ...mixkit(48170) },
+  { id: 'demo-crafts', title: 'الأعمال اليدوية', description: 'قص ولصق وتشكيل يعزّز الثقة والاستقلالية لدى الطفل.', ...mixkit(16088) },
+].map((item, i) => ({ ...item, order: i + 1, isVisible: true, createdAt: demoStamp, updatedAt: demoStamp }))

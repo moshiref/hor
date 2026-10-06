@@ -14,7 +14,9 @@ export type ActivityItem = Timestamps & {
   id: string
   title: string
   description?: string
-  image?: string // idb:// or URL
+  image?: string // idb:// or URL — also used as the video poster
+  video?: string // direct .mp4 URL, played in the lightbox
+  videoPreview?: string // optional lighter .mp4 for the muted card preview
   order: number
   isVisible: boolean
 }

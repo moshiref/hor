@@ -253,6 +253,10 @@ export default function Settings() {
                   <textarea value={it.description ?? ''} onChange={(e) => { const n = [...content.activities.items]; n[idx] = { ...n[idx], description: e.target.value }; setContent({ ...content, activities: { ...content.activities, items: n } }) }} className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-xs" rows={2} placeholder="وصف مختصر" />
                   <div className="mt-3">
                     <ImageUploader label="صورة النشاط" value={it.image ?? null} storageKey={`activity_${it.id}`} onChange={(v) => { const n = [...content.activities.items]; n[idx] = { ...n[idx], image: v ?? undefined }; setContent({ ...content, activities: { ...content.activities, items: n } }) }} />
+                    <label className="mt-2 flex flex-col gap-1 text-xs">
+                      <span className="font-bold">رابط فيديو (MP4) — اختياري، والصورة تظهر كغلاف له</span>
+                      <input dir="ltr" value={it.video ?? ''} onChange={(e) => { const n = [...content.activities.items]; n[idx] = { ...n[idx], video: e.target.value.trim() || undefined, videoPreview: undefined }; setContent({ ...content, activities: { ...content.activities, items: n } }) }} placeholder="https://.../video.mp4" className="rounded-lg border border-gray-200 px-3 py-2 text-xs" />
+                    </label>
                   </div>
                   <label className="mt-2 flex items-center gap-2 text-xs"><input type="checkbox" checked={it.isVisible} onChange={(e) => { const n = [...content.activities.items]; n[idx] = { ...n[idx], isVisible: e.target.checked }; setContent({ ...content, activities: { ...content.activities, items: n } }) }} /> ظاهر</label>
                 </div>

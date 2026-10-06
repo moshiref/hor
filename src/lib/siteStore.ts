@@ -7,7 +7,7 @@ import type { ActivitiesContent, ContactContent, FooterContent, FormConfig, Loca
 // Defaults for new CMS sections
 const defaultActivities: ActivitiesContent = {
   title: 'أنشطة وفعاليات المركز',
-  description: 'لحظات من يوم طفلك داخل المركز — سيتم تحديث هذا المعرض بالصور الحقيقية من المركز قريبًا. البنية جاهزة لربط الصور مباشرة من لوحة التحكم.',
+  description: 'لحظات من يوم طفلك داخل المركز — تعلّم ولعب وإبداع في بيئة آمنة ومحفّزة.',
   items: [],
 }
 

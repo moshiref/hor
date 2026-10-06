@@ -13,6 +13,8 @@ import Contact from './components/Contact'
 import Footer from './components/Footer'
 import WhatsAppFloat from './components/WhatsAppFloat'
 import { GlobalCursorGlow } from '@/components/effects/GlobalCursorGlow'
+import { CardTilt3D } from '@/components/effects/CardTilt3D'
+import { ScrollProgress } from '@/components/effects/ScrollProgress'
 
 import { lazy, Suspense, useEffect, useState } from 'react'
 import AdminLayout from '@/admin/AdminLayout'
@@ -59,6 +61,8 @@ function PublicSite() {
   return (
     <div className="relative min-h-screen bg-cream-100 overflow-clip">
       <GlobalCursorGlow />
+      <CardTilt3D />
+      <ScrollProgress />
       <Navbar />
       <main className="relative z-10">{renderSections()}</main>
       <Footer />

@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/Card'
 import { GlassIcon } from '@/components/ui/GlassIcon'
 import { Reveal } from '@/components/effects/Reveal'
 import { Spotlight } from '@/components/effects/Spotlight'
+import { DecorOrbs } from '@/components/effects/DecorOrbs'
 import { useMouseParallax } from '@/hooks/useMouseParallax'
 import { siteContentService } from '@/services/site.service'
 
@@ -18,7 +19,13 @@ export default function Schedule() {
       aria-labelledby="schedule-heading"
     >
       <Spotlight />
-      <Container>
+      <DecorOrbs
+        orbs={[
+          { tone: 'teal', size: 64, pos: { top: '25%', left: '-20px' }, depth: 1.1, float: 'float-b' },
+          { tone: 'raspberry', size: 30, pos: { bottom: '18%', right: '40px' }, depth: 0.8 },
+        ]}
+      />
+      <Container className="relative z-10">
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
             <p className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3.5 py-1 text-xs font-bold tracking-wide text-amber-700 ring-1 ring-amber-200">

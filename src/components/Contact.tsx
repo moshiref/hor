@@ -2,6 +2,7 @@ import { MessageCircle, Phone } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
 import { Reveal } from '@/components/effects/Reveal'
 import { Spotlight } from '@/components/effects/Spotlight'
+import { DecorOrbs } from '@/components/effects/DecorOrbs'
 import { useMouseParallax } from '@/hooks/useMouseParallax'
 import { getSiteConfig } from '@/lib/siteStore'
 import { siteContentService } from '@/services/site.service'
@@ -22,7 +23,13 @@ export default function Contact() {
       aria-labelledby="contact-heading"
     >
       <Spotlight />
-      <Container>
+      <DecorOrbs
+        orbs={[
+          { tone: 'raspberry', size: 60, pos: { top: '20%', right: '-18px' }, depth: 1.1 },
+          { tone: 'teal', size: 30, pos: { bottom: '25%', left: '40px' }, depth: 0.8, float: 'float-b' },
+        ]}
+      />
+      <Container className="relative z-10">
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
             <p className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-ink-50 px-3.5 py-1 text-xs font-bold tracking-wide text-ink-700 ring-1 ring-ink-200">

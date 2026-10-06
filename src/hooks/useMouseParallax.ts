@@ -33,7 +33,7 @@ export function useMouseParallax(strength = 14) {
             const ty = y * strength * depth
             const tiltX = y * 4 * depth
             const tiltY = -x * 6 * depth
-            node.style.transform = `translate3d(${tx}px, ${ty}px, 0) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`
+            node.style.transform = `perspective(1000px) translate3d(${tx}px, ${ty}px, 0) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`
           })
           // also update CSS vars for spotlight position
           el.style.setProperty('--mx', `${((e.clientX - rect.left) / rect.width) * 100}%`)
@@ -44,7 +44,7 @@ export function useMouseParallax(strength = 14) {
 
     const handleLeave = () => {
       const layers = el.querySelectorAll<HTMLElement>('[data-parallax]')
-      layers.forEach((n) => (n.style.transform = 'translate3d(0,0,0) rotateX(0) rotateY(0)'))
+      layers.forEach((n) => (n.style.transform = 'perspective(1000px) translate3d(0,0,0) rotateX(0) rotateY(0)'))
     }
 
     el.addEventListener('mousemove', handleMove, { passive: true })

@@ -7,6 +7,10 @@ import { useImageUrl } from '@/hooks/useImageUrl'
 import { useMouseParallax } from '@/hooks/useMouseParallax'
 import { Reveal } from '@/components/effects/Reveal'
 import { Spotlight } from '@/components/effects/Spotlight'
+import { lazy, Suspense } from 'react'
+
+// three.js lives in its own chunk, fetched after first paint
+const Hero3DScene = lazy(() => import('@/components/effects/Hero3DScene'))
 
 type OrbitItem = {
   icon: typeof Heart
@@ -48,6 +52,11 @@ export default function Hero() {
     >
       <Spotlight className="opacity-60" />
 
+      {/* Real-time 3D layer — behind all content */}
+      <Suspense fallback={null}>
+        <Hero3DScene className="absolute inset-0 z-0" />
+      </Suspense>
+
       {/* subtle gold arc — luxury soft gold frame */}
       <div
         aria-hidden
@@ -62,7 +71,7 @@ export default function Hero() {
       <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-[380px] w-[380px] rounded-full bg-gradient-to-br from-raspberry-100/45 to-amber-100/35 blur-3xl" />
       <div aria-hidden className="pointer-events-none absolute -left-20 bottom-10 h-[320px] w-[320px] rounded-full bg-teal-100/35 blur-3xl" />
 
-      <Container>
+      <Container className="relative z-10">
         <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
           {/* Text column — unchanged content */}
           <div className="relative z-10 text-center lg:text-right">
@@ -77,7 +86,7 @@ export default function Hero() {
             <Reveal delay={90}>
               <h1
                 id="hero-heading"
-                className="font-display bg-gradient-to-l from-raspberry-500 via-amber-500 to-teal-600 bg-clip-text text-4xl font-bold leading-[1.15] text-transparent sm:text-5xl lg:text-[3.6rem]"
+                className="font-display bg-gradient-to-l from-raspberry-500 via-amber-500 to-teal-600 bg-clip-text text-4xl font-bold leading-[1.15] text-transparent [filter:drop-shadow(0_1px_0_rgba(255,255,255,0.9))_drop-shadow(0_2px_0_rgba(196,28,99,0.18))_drop-shadow(0_10px_18px_rgba(23,35,60,0.14))] sm:text-5xl lg:text-[3.6rem]"
               >
                 {content.title}
               </h1>

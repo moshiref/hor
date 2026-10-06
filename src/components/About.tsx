@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/Card'
 import { GlassIcon } from '@/components/ui/GlassIcon'
 import { Reveal } from '@/components/effects/Reveal'
 import { Spotlight } from '@/components/effects/Spotlight'
+import { DecorOrbs } from '@/components/effects/DecorOrbs'
 import { useMouseParallax } from '@/hooks/useMouseParallax'
 import { siteContentService } from '@/services/site.service'
 import type { FeatureIcon } from '@/types/content'
@@ -46,7 +47,14 @@ export default function About() {
       aria-labelledby="about-heading"
     >
       <Spotlight />
-      <Container>
+      <DecorOrbs
+        orbs={[
+          { tone: 'amber', size: 70, pos: { top: '12%', left: '-24px' }, depth: 1.2 },
+          { tone: 'teal', size: 40, pos: { bottom: '14%', right: '28px' }, depth: 0.7, float: 'float-b' },
+          { tone: 'raspberry', size: 22, pos: { top: '30%', right: '60px' }, depth: 1.6, float: 'float-c', blur: true },
+        ]}
+      />
+      <Container className="relative z-10">
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
           {/* Copy */}
           <Reveal delay={0}>
@@ -81,8 +89,8 @@ export default function About() {
             {visibleFeatures.map((feature, idx) => {
               const Icon = iconMap[feature.icon] ?? BookOpen
               return (
-                <Reveal key={feature.id} delay={idx * 80}>
-                  <Card className="group flex items-start gap-4" hover>
+                <Reveal key={feature.id} delay={idx * 80} className="h-full">
+                  <Card className="group flex h-full items-start gap-4" hover>
                     <GlassIcon variant={glassVariant[feature.icon] ?? 'teal'} size="md">
                       <Icon size={22} aria-hidden />
                     </GlassIcon>
@@ -105,14 +113,13 @@ export default function About() {
         {(content.vision || content.mission) && (
           <div className="mt-14 grid gap-5 md:grid-cols-2">
             {[
-              { key: 'vision', label: 'الرؤية', text: content.vision, Icon: Eye, variant: 'raspberry' as const, accent: 'from-raspberry-500 to-raspberry-300' },
-              { key: 'mission', label: 'رسالتنا', text: content.mission, Icon: Target, variant: 'teal' as const, accent: 'from-teal-500 to-teal-300' },
+              { key: 'vision', label: 'الرؤية', text: content.vision, Icon: Eye, variant: 'raspberry' as const, accent: 'border-t-raspberry-400' },
+              { key: 'mission', label: 'رسالتنا', text: content.mission, Icon: Target, variant: 'teal' as const, accent: 'border-t-teal-400' },
             ]
               .filter((item) => item.text)
               .map(({ key, label, text, Icon, variant, accent }, idx) => (
-                <Reveal key={key} delay={idx * 100}>
-                  <Card className="relative h-full overflow-hidden text-right" hover>
-                    <span aria-hidden className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-l ${accent}`} />
+                <Reveal key={key} delay={idx * 100} className="h-full">
+                  <Card className={`h-full border-t-4 text-right ${accent}`} hover>
                     <div className="flex items-center gap-3">
                       <GlassIcon variant={variant} size="md">
                         <Icon size={22} aria-hidden />

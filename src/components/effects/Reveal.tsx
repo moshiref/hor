@@ -18,7 +18,8 @@ export function Reveal({ delay = 0, stagger = 0, className, children, style, ...
       ref={ref as React.RefObject<HTMLDivElement>}
       className={cn(
         'will-change-transform transition-all duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)]',
-        visible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0',
+        'reveal-3d',
+        visible ? 'is-visible opacity-100' : 'opacity-0',
         className,
       )}
       style={{ transitionDelay: `${delay + stagger}ms`, ...style }}

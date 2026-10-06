@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/Card'
 import { GlassIcon } from '@/components/ui/GlassIcon'
 import { Reveal } from '@/components/effects/Reveal'
 import { Spotlight } from '@/components/effects/Spotlight'
+import { DecorOrbs } from '@/components/effects/DecorOrbs'
 import { useMouseParallax } from '@/hooks/useMouseParallax'
 import { siteContentService } from '@/services/site.service'
 import { useImageUrl } from '@/hooks/useImageUrl'
@@ -36,8 +37,8 @@ function ProgramCard({ program, iconMap, index }: { program: ReturnType<typeof s
   const imageUrl = useImageUrl((program as unknown as { image?: string }).image ?? null)
   const Icon = iconMap[program.icon] ?? BookOpen
   return (
-    <Reveal delay={index * 70}>
-      <Card padding="lg" hover className="group flex flex-col overflow-hidden">
+    <Reveal delay={index * 70} className="h-full">
+      <Card padding="lg" hover className="group flex h-full flex-col overflow-hidden">
         {imageUrl ? (
           <div className="-mx-6 -mt-6 mb-4 aspect-[16/10] overflow-hidden bg-cream-50">
             <img src={imageUrl} alt={program.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" loading="lazy" />
@@ -65,7 +66,14 @@ export default function Programs() {
       aria-labelledby="programs-heading"
     >
       <Spotlight />
-      <Container>
+      <DecorOrbs
+        orbs={[
+          { tone: 'raspberry', size: 84, pos: { top: '18%', right: '-30px' }, depth: 1.1 },
+          { tone: 'amber', size: 36, pos: { bottom: '20%', left: '34px' }, depth: 0.8, float: 'float-c' },
+          { tone: 'teal', size: 20, pos: { top: '60%', right: '70px' }, depth: 1.5, float: 'float-b', blur: true },
+        ]}
+      />
+      <Container className="relative z-10">
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
             <p className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-raspberry-50 px-3.5 py-1 text-xs font-bold tracking-wide text-raspberry-700 ring-1 ring-raspberry-200">

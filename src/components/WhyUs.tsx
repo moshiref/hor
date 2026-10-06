@@ -3,6 +3,7 @@ import { Container } from '@/components/ui/Container'
 import { GlassIcon } from '@/components/ui/GlassIcon'
 import { Reveal } from '@/components/effects/Reveal'
 import { Spotlight } from '@/components/effects/Spotlight'
+import { DecorOrbs } from '@/components/effects/DecorOrbs'
 import { useMouseParallax } from '@/hooks/useMouseParallax'
 import { siteContentService } from '@/services/site.service'
 
@@ -17,7 +18,14 @@ export default function WhyUs() {
       aria-labelledby="whyus-heading"
     >
       <Spotlight />
-      <Container>
+      <DecorOrbs
+        orbs={[
+          { tone: 'amber', size: 80, pos: { bottom: '12%', right: '-28px' }, depth: 1.1, float: 'float-c' },
+          { tone: 'raspberry', size: 34, pos: { top: '20%', left: '50px' }, depth: 0.8 },
+          { tone: 'teal', size: 18, pos: { top: '55%', left: '30px' }, depth: 1.5, float: 'float-b', blur: true },
+        ]}
+      />
+      <Container className="relative z-10">
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
             <p className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-ink-50 px-3.5 py-1 text-xs font-bold tracking-wide text-ink-700 ring-1 ring-ink-200">

@@ -2,9 +2,87 @@ import { useEffect, useMemo, useState } from 'react'
 import { load, storageKeys } from '@/lib/storage'
 import { mockApplicationsService } from '@/services/applications.service'
 import { exportToExcel, exportToPDF, printTable } from '@/lib/exportUtils'
+import { getDocumentUrl } from '@/lib/documentStore'
 import type { StudentApplication } from '@/types/applications'
+import { FileText, Image as ImageIcon, ExternalLink, Loader2, Eye } from 'lucide-react'
 
 type SortOpt = 'newest' | 'oldest' | 'az' | 'za'
+
+type DocItem = { label: string; path?: string | null }
+
+function DocumentLink({ label, path }: DocItem) {
+  const [url, setUrl] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const isPdf = path?.toLowerCase().endsWith('.pdf') || path?.includes('.pdf')
+
+  const handleOpen = async () => {
+    if (!path) return
+    setLoading(true)
+    try {
+      const signed = await getDocumentUrl(path)
+      if (signed) {
+        setUrl(signed)
+        window.open(signed, '_blank', 'noopener,noreferrer')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // preload url for preview if image
+  useEffect(() => {
+    if (!path) return
+    let cancelled = false
+    // try to get signed url silently
+    getDocumentUrl(path).then((u) => {
+      if (!cancelled && u) setUrl(u)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [path])
+
+  if (!path) {
+    return (
+      <div className="flex items-center gap-2 rounded-xl border border-dashed border-gray-200 bg-gray-50 px-3 py-2.5 text-xs text-gray-400">
+        {isPdf ? <FileText size={14} /> : <ImageIcon size={14} />}
+        <span className="break-words">{label}</span>
+        <span className="ms-auto text-[11px]">غير مرفوع</span>
+      </div>
+    )
+  }
+
+  const isImage = !isPdf
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-ink-100 bg-white">
+      <div className="flex items-center gap-2 bg-cream-50 px-3 py-2">
+        {isPdf ? <FileText size={14} className="shrink-0 text-raspberry-500" /> : <ImageIcon size={14} className="shrink-0 text-teal-600" />}
+        <span className="min-w-0 flex-1 truncate text-xs font-bold text-ink-700">{label}</span>
+        <button
+          onClick={handleOpen}
+          disabled={loading}
+          className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full bg-ink-800 px-3 text-[11px] font-bold text-white hover:bg-ink-900 disabled:opacity-50"
+        >
+          {loading ? <Loader2 size={12} className="animate-spin" /> : <ExternalLink size={12} />}
+          {isPdf ? 'فتح الملف' : 'معاينة'}
+        </button>
+      </div>
+      {isImage && url ? (
+        <div className="p-2">
+          <img src={url} alt={label} className="max-h-40 w-full rounded-lg object-contain bg-cream-50" loading="lazy" />
+        </div>
+      ) : isImage && !url ? (
+        <div className="flex items-center justify-center p-4 text-xs text-gray-400">
+          <Loader2 size={14} className="animate-spin me-1" /> جارٍ التحميل...
+        </div>
+      ) : null}
+      <p className="truncate px-3 pb-2 text-[10px] text-gray-400" dir="ltr" title={path}>
+        {path}
+      </p>
+    </div>
+  )
+}
 
 export default function Students() {
   const [raw, setRaw] = useState<StudentApplication[]>(() => load<StudentApplication[]>(storageKeys.students, []))
@@ -17,16 +95,28 @@ export default function Students() {
   const [detail, setDetail] = useState<StudentApplication | null>(null)
 
   useEffect(() => {
-    setRaw(load<StudentApplication[]>(storageKeys.students, []))
+    // try sync from Supabase
+    mockApplicationsService.listStudents().then((res) => {
+      if (res.data) setRaw(res.data)
+    }).catch(() => setRaw(load<StudentApplication[]>(storageKeys.students, [])))
+    const onStorage = () => setRaw(load<StudentApplication[]>(storageKeys.students, []))
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
   }, [])
 
-  const refresh = () => setRaw(load<StudentApplication[]>(storageKeys.students, []))
+  const refresh = () => {
+    // prefer supabase if available, else local
+    mockApplicationsService.listStudents().then((r) => {
+      if (r.data) setRaw(r.data)
+      else setRaw(load<StudentApplication[]>(storageKeys.students, []))
+    }).catch(() => setRaw(load<StudentApplication[]>(storageKeys.students, [])))
+  }
 
   const filtered = useMemo(() => {
     let arr = [...raw]
     if (search.trim()) {
       const q = search.trim().toLowerCase()
-      arr = arr.filter((r) => `${r.studentName} ${r.guardianName} ${r.guardianPhone} ${r.district}`.toLowerCase().includes(q))
+      arr = arr.filter((r) => `${r.studentName} ${r.guardianName} ${r.guardianPhone} ${r.motherPhone ?? ''} ${r.fatherPhone ?? ''} ${r.district}`.toLowerCase().includes(q))
     }
     if (statusFilter !== 'all') arr = arr.filter((r) => r.status === statusFilter)
     if (dateFrom) arr = arr.filter((r) => new Date(r.createdAt) >= new Date(dateFrom))
@@ -76,12 +166,15 @@ export default function Students() {
       الفترة: r.period,
       'ولي الأمر': r.guardianName,
       الجوال: r.guardianPhone,
+      'رقم الأم': r.motherPhone ?? '—',
+      'رقم الأب': r.fatherPhone ?? '—',
+      'جوال آخر': r.otherPhone ?? '—',
       الحي: r.district,
       مواصلات: r.needsTransport === 'yes' ? 'نعم' : 'لا',
       الحالة: r.status,
       التاريخ: new Date(r.createdAt).toLocaleDateString('ar-SA'),
     }))
-    exportToExcel(rows, columns, 'طلاب')
+    exportToExcel(rows, [...columns.slice(0, 7), 'رقم الأم', 'رقم الأب', 'جوال آخر', ...columns.slice(7)], 'طلاب')
   }
 
   const doPdf = () => {
@@ -93,6 +186,8 @@ export default function Students() {
       r.period,
       r.guardianName,
       r.guardianPhone,
+      r.motherPhone ?? '—',
+      r.fatherPhone ?? '—',
       r.district,
       r.needsTransport === 'yes' ? 'نعم' : 'لا',
       r.status,
@@ -104,7 +199,7 @@ export default function Students() {
     if (dateFrom) filters.push(`من: ${dateFrom}`)
     if (dateTo) filters.push(`إلى: ${dateTo}`)
     filters.push(`ترتيب: ${sort}`)
-    exportToPDF(rows, columns, 'طلبات الطلاب', filters)
+    exportToPDF(rows, [...columns], 'طلبات الطلاب', filters)
   }
 
   return (
@@ -184,7 +279,12 @@ export default function Students() {
                         </select>
                       </td>
                       <td className="whitespace-nowrap p-2 text-center text-xs">{new Date(r.createdAt).toLocaleDateString('ar-SA')}</td>
-                      <td className="whitespace-nowrap p-2 text-center"><button onClick={() => handleDeleteOne(r.id)} className="inline-flex min-h-[32px] min-w-[44px] items-center justify-center rounded-full px-3 py-1 text-xs font-bold text-raspberry-600 transition-colors hover:bg-raspberry-50">حذف</button></td>
+                      <td className="whitespace-nowrap p-2 text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <button onClick={() => setDetail(r)} className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-ink-50 text-ink-700 hover:bg-ink-100" aria-label="عرض التفاصيل"><Eye size={12} /></button>
+                          <button onClick={() => handleDeleteOne(r.id)} className="inline-flex min-h-[32px] min-w-[44px] items-center justify-center rounded-full px-3 py-1 text-xs font-bold text-raspberry-600 transition-colors hover:bg-raspberry-50">حذف</button>
+                        </div>
+                      </td>
                     </tr>
                   ))
                 )}
@@ -196,15 +296,15 @@ export default function Students() {
 
       {detail && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-3 backdrop-blur-[1px] sm:p-4" onClick={() => setDetail(null)} role="dialog" aria-modal="true" aria-label="تفاصيل الطلب">
-          <div onClick={(e) => e.stopPropagation()} className="flex max-h-[92vh] max-h-[92dvh] w-full max-w-[92vw] flex-col overflow-hidden rounded-2xl bg-white shadow-xl sm:max-w-2xl">
+          <div onClick={(e) => e.stopPropagation()} className="flex max-h-[92vh] max-h-[92dvh] w-full max-w-[92vw] flex-col overflow-hidden rounded-2xl bg-white shadow-xl sm:max-w-3xl">
             <div className="flex shrink-0 items-center justify-between border-b border-gray-100 px-4 py-4 sm:px-6">
-              <h2 className="font-display text-base font-bold text-ink-800 sm:text-lg">تفاصيل الطلب</h2>
+              <h2 className="font-display text-base font-bold text-ink-800 sm:text-lg">تفاصيل الطلب — {detail.studentName}</h2>
               <button onClick={() => setDetail(null)} className="inline-flex h-9 w-9 items-center justify-center rounded-full text-ink-400 transition-colors hover:bg-gray-50 hover:text-ink-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raspberry-500" aria-label="إغلاق">✕</button>
             </div>
 
             <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
               <div className="grid gap-6">
-                <section className="min-w-0">
+                <section className="min-w-0 rounded-xl bg-cream-50 p-4">
                   <h3 className="text-sm font-bold text-raspberry-600">البيانات الأساسية</h3>
                   <div className="mt-3 grid gap-3 text-sm min-[480px]:grid-cols-2">
                     <p className="break-words"><span className="text-ink-400">الطالب:</span> {detail.studentName}</p>
@@ -214,24 +314,45 @@ export default function Students() {
                     <p className="break-words"><span className="text-ink-400">الفترة:</span> {detail.period}</p>
                   </div>
                 </section>
-                <section className="min-w-0">
+
+                <section className="min-w-0 rounded-xl border border-ink-100 bg-white p-4">
                   <h3 className="text-sm font-bold text-raspberry-600">بيانات التواصل</h3>
                   <div className="mt-3 grid gap-3 text-sm min-[480px]:grid-cols-2">
                     <p className="break-words"><span className="text-ink-400">ولي الأمر:</span> {detail.guardianName}</p>
-                    <p className="break-words"><span className="text-ink-400">الجوال:</span> <bdi dir="ltr">{detail.guardianPhone}</bdi></p>
+                    <p className="break-words"><span className="text-ink-400">الجوال الرئيسي:</span> <bdi dir="ltr">{detail.guardianPhone}</bdi></p>
+                    <p className="break-words"><span className="text-ink-400">رقم الأم:</span> <bdi dir="ltr">{detail.motherPhone ?? '—'}</bdi></p>
+                    <p className="break-words"><span className="text-ink-400">رقم الأب:</span> <bdi dir="ltr">{detail.fatherPhone ?? '—'}</bdi></p>
+                    <p className="break-words"><span className="text-ink-400">جوال آخر:</span> <bdi dir="ltr">{detail.otherPhone ?? '—'}</bdi></p>
                     <p className="break-words"><span className="text-ink-400">الحي:</span> {detail.district}</p>
                     <p><span className="text-ink-400">مواصلات:</span> {detail.needsTransport === 'yes' ? 'نعم' : 'لا'}</p>
                   </div>
                 </section>
+
                 <section className="min-w-0">
                   <h3 className="text-sm font-bold text-raspberry-600">الملاحظات</h3>
                   <p className="mt-2 break-words text-sm"><span className="text-ink-400">صحية:</span> {detail.healthNotes || '—'}</p>
                   <p className="mt-1 break-words text-sm"><span className="text-ink-400">إضافية:</span> {detail.extraNotes || '—'}</p>
                 </section>
-                <section className="min-w-0">
-                  <h3 className="text-sm font-bold text-raspberry-600">بيانات الطلب</h3>
-                  <p className="mt-2 break-words text-sm"><span className="text-ink-400">تاريخ الطلب:</span> {new Date(detail.createdAt).toLocaleString('ar-SA')}</p>
-                  <p className="break-words text-sm"><span className="text-ink-400">الحالة:</span> {detail.status}</p>
+
+                <section className="min-w-0 rounded-xl border border-amber-100 bg-amber-50/40 p-4">
+                  <h3 className="flex items-center gap-1.5 text-sm font-bold text-amber-700"><FileText size={14} /> مستندات وبيانات ولي الأمر</h3>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    <DocumentLink label="الكشف الصحي للطفل" path={detail.healthReportUrl} />
+                    <DocumentLink label="هوية الطفل / كرت العائلة" path={detail.childIdUrl} />
+                    <DocumentLink label="هوية ولي الأمر" path={detail.guardianIdUrl} />
+                    <DocumentLink label="صورة الطفل" path={detail.childPhotoUrl} />
+                    <DocumentLink label="شهادة الميلاد" path={detail.birthCertificateUrl} />
+                    <DocumentLink label="كروكي موقع السكن" path={detail.locationSketchUrl} />
+                    <DocumentLink label="إثبات التحويل" path={detail.paymentProofUrl} />
+                  </div>
+                  <p className="mt-3 text-[11px] text-gray-400">الملفات محفوظة في التخزين الخاص — يتم توليد رابط آمن مؤقت عند المعاينة (صلاحية ساعة). لا يتم عرضها للعامة.</p>
+                </section>
+
+                <section className="min-w-0 text-xs text-gray-500">
+                  <p>تاريخ الطلب: {new Date(detail.createdAt).toLocaleString('ar-SA')}</p>
+                  <p>الحالة: {detail.status}</p>
+                  <p>الإقرار بالشروط: {detail.termsAcceptedAt ? new Date(detail.termsAcceptedAt).toLocaleString('ar-SA') : '—'}</p>
+                  <p className="mt-1 break-all">المعرّف: <span className="font-mono text-[11px]">{detail.id}</span></p>
                 </section>
               </div>
             </div>

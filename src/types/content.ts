@@ -27,6 +27,8 @@ export type AboutContent = Timestamps & {
   id: string
   title: string // "من نحن"
   paragraphs: string[]
+  vision?: string // الرؤية
+  mission?: string // رسالتنا
   features: Feature[]
   isVisible: boolean
 }

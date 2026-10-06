@@ -1,4 +1,4 @@
-import { BookOpen, Bus, Clock3, Heart, Languages, ShieldCheck, Sparkles, Users } from 'lucide-react'
+import { BookOpen, Bus, Clock3, Eye, Heart, Languages, ShieldCheck, Sparkles, Target, Users } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
 import { Card } from '@/components/ui/Card'
@@ -100,6 +100,31 @@ export default function About() {
             })}
           </div>
         </div>
+
+        {/* Vision & Mission */}
+        {(content.vision || content.mission) && (
+          <div className="mt-14 grid gap-5 md:grid-cols-2">
+            {[
+              { key: 'vision', label: 'الرؤية', text: content.vision, Icon: Eye, variant: 'raspberry' as const, accent: 'from-raspberry-500 to-raspberry-300' },
+              { key: 'mission', label: 'رسالتنا', text: content.mission, Icon: Target, variant: 'teal' as const, accent: 'from-teal-500 to-teal-300' },
+            ]
+              .filter((item) => item.text)
+              .map(({ key, label, text, Icon, variant, accent }, idx) => (
+                <Reveal key={key} delay={idx * 100}>
+                  <Card className="relative h-full overflow-hidden text-right" hover>
+                    <span aria-hidden className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-l ${accent}`} />
+                    <div className="flex items-center gap-3">
+                      <GlassIcon variant={variant} size="md">
+                        <Icon size={22} aria-hidden />
+                      </GlassIcon>
+                      <h3 className="font-display text-xl font-bold text-ink-800">{label}</h3>
+                    </div>
+                    <p className="mt-4 text-base leading-loose text-ink-600">{text}</p>
+                  </Card>
+                </Reveal>
+              ))}
+          </div>
+        )}
       </Container>
     </section>
   )

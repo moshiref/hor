@@ -21,6 +21,8 @@ export interface ApplicationsService {
   listStudents(filters?: ApplicationFilters, pagination?: PaginationParams): Promise<ListResult<StudentApplication>>
   getStudent(id: string): Promise<ApiResponse<StudentApplication>>
   updateStudentStatus(id: string, status: StudentApplication['status']): Promise<ApiResponse<StudentApplication>>
+  updateStudentDocs(id: string, patch: Partial<Pick<StudentApplication, 'healthReportUrl' | 'childIdUrl' | 'guardianIdUrl' | 'childPhotoUrl' | 'birthCertificateUrl' | 'locationSketchUrl' | 'paymentProofUrl'>>): Promise<ApiResponse<StudentApplication>>
+  updateStudent(id: string, patch: Partial<StudentApplication>): Promise<ApiResponse<StudentApplication>>
   deleteStudents(ids: string[]): Promise<void>
   createStaff(payload: CreateStaffApplicationPayload): Promise<ApiResponse<StaffApplication>>
   listStaff(filters?: ApplicationFilters, pagination?: PaginationParams): Promise<ListResult<StaffApplication>>
@@ -128,6 +130,41 @@ export const mockApplicationsService: ApplicationsService = {
     const idx = all.findIndex((r) => r.id === id)
     if (idx === -1) throw new Error('الطلب غير موجود')
     all[idx] = { ...all[idx], status, updatedAt: new Date().toISOString() }
+    writeStudents(all)
+    return { data: all[idx] }
+  },
+
+  async updateStudentDocs(id, patch) {
+    return (mockApplicationsService as ApplicationsService & { updateStudent: ApplicationsService['updateStudent'] }).updateStudent(id, patch as Partial<StudentApplication>)
+  },
+
+  async updateStudent(id, patch) {
+    const now = new Date().toISOString()
+    try {
+      const { hasSupabase, supabase } = await import('@/lib/supabase')
+      if (hasSupabase() && supabase) {
+        const all = readStudents()
+        const rec = all.find((r) => r.id === id)
+        if (rec) {
+          const updated = { ...rec, ...patch, updatedAt: now } as StudentApplication
+          const { error } = await supabase.from('student_applications').update({ data: updated } as never).eq('id', id)
+          if (!error) {
+            const idx2 = all.findIndex((r) => r.id === id)
+            if (idx2 !== -1) {
+              all[idx2] = updated
+              writeStudents(all)
+              return { data: updated }
+            }
+          }
+        }
+      }
+    } catch {
+      // fallback
+    }
+    const all = readStudents()
+    const idx = all.findIndex((r) => r.id === id)
+    if (idx === -1) throw new Error('الطلب غير موجود')
+    all[idx] = { ...all[idx], ...patch, updatedAt: now } as StudentApplication
     writeStudents(all)
     return { data: all[idx] }
   },

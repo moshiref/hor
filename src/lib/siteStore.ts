@@ -175,7 +175,7 @@ export function getSiteContent(): StoredSiteContent {
     }
   return {
     hero: stored.hero ?? defaultHero,
-    about: stored.about ?? defaultAbout,
+    about: stored.about ? { vision: defaultAbout.vision, mission: defaultAbout.mission, ...stored.about } : defaultAbout,
     programs: stored.programs ?? defaultPrograms,
     whyUs: (stored.whyUs as unknown as StoredSiteContent['whyUs']) ?? (defaultWhyUs as unknown as StoredSiteContent['whyUs']),
     schedule: stored.schedule ?? defaultSchedule,

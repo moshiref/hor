@@ -41,10 +41,27 @@ export type StudentApplication = Timestamps &
     district: string // الحي / العنوان
     needsTransport: YesNo
 
+    // أرقام إضافية (جديد)
+    motherPhone?: string
+    fatherPhone?: string
+    otherPhone?: string
+
+    // مستندات ولي الأمر والطفل — storage paths (private bucket `student-documents`)
+    healthReportUrl?: string | null
+    childIdUrl?: string | null
+    guardianIdUrl?: string | null
+    childPhotoUrl?: string | null
+    birthCertificateUrl?: string | null
+    locationSketchUrl?: string | null
+    paymentProofUrl?: string | null
+
     // صحي
     healthNotes?: string
     foodAllergy?: string
     extraNotes?: string
+
+    // وقت إقرار ولي الأمر بصحة البيانات والالتزام بالشروط
+    termsAcceptedAt?: string
 
     // Meta
     status: ApplicationStatus

@@ -32,8 +32,10 @@ create table if not exists public.staff_applications (
 );
 create index if not exists idx_staff_created on public.staff_applications (created_at desc);
 
--- Storage bucket for images
+-- Storage buckets
 insert into storage.buckets (id, name, public) values ('images', 'images', true)
+on conflict (id) do nothing;
+insert into storage.buckets (id, name, public) values ('student-documents', 'student-documents', false)
 on conflict (id) do nothing;
 
 -- RLS
@@ -66,12 +68,25 @@ create policy "auth read staff" on public.staff_applications for select using (a
 drop policy if exists "auth update staff" on public.staff_applications;
 create policy "auth update staff" on public.staff_applications for all using (auth.role() = 'authenticated');
 
--- Storage policies: public read, authenticated write
+-- Storage policies: public read, authenticated write (images = public)
 drop policy if exists "public read images" on storage.objects;
 create policy "public read images" on storage.objects for select using (bucket_id = 'images');
 
 drop policy if exists "auth write images" on storage.objects;
 create policy "auth write images" on storage.objects for all using (bucket_id = 'images' and auth.role() = 'authenticated') with check (bucket_id = 'images');
+
+-- Student documents — private, only admin read; public can insert (registration)
+drop policy if exists "public insert student-documents" on storage.objects;
+create policy "public insert student-documents" on storage.objects for insert to anon, authenticated with check (bucket_id = 'student-documents');
+
+drop policy if exists "auth read student-documents" on storage.objects;
+create policy "auth read student-documents" on storage.objects for select to authenticated using (bucket_id = 'student-documents');
+
+drop policy if exists "auth update student-documents" on storage.objects;
+create policy "auth update student-documents" on storage.objects for update to authenticated using (bucket_id = 'student-documents') with check (bucket_id = 'student-documents');
+
+drop policy if exists "auth delete student-documents" on storage.objects;
+create policy "auth delete student-documents" on storage.objects for delete to authenticated using (bucket_id = 'student-documents');
 
 -- Note: create admin user via Supabase Dashboard > Authentication > Add user
 -- Email: admin@hor-alain.local  Password: (set strong password)

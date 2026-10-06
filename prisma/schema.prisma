@@ -67,8 +67,21 @@ model StudentApplication {
   guardianPhone   String            @map("guardian_phone") // encrypted at rest
   district        String
   needsTransport  Boolean           @map("needs_transport")
+  // أرقام إضافية
+  motherPhone     String?           @map("mother_phone")
+  fatherPhone     String?           @map("father_phone")
+  otherPhone      String?           @map("other_phone")
+  // مستندات (private bucket student-documents)
+  healthReportUrl     String?       @map("health_report_url")
+  childIdUrl          String?       @map("child_id_url")
+  guardianIdUrl       String?       @map("guardian_id_url")
+  childPhotoUrl       String?       @map("child_photo_url")
+  birthCertificateUrl String?       @map("birth_certificate_url")
+  locationSketchUrl   String?       @map("location_sketch_url")
+  paymentProofUrl     String?       @map("payment_proof_url")
   healthNotes     String?           @map("health_notes") // encrypted
   extraNotes      String?           @map("extra_notes") // encrypted
+  termsAcceptedAt DateTime?         @map("terms_accepted_at")
   status          ApplicationStatus @default(new)
   reviewedAt      DateTime?         @map("reviewed_at")
   reviewedById    String?           @map("reviewed_by")

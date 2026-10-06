@@ -160,6 +160,16 @@ export default function Settings() {
           <input value={content.about.title} onChange={(e) => setContent({ ...content, about: { ...content.about, title: e.target.value } })} className="min-w-0 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm font-bold" />
         </label>
         <textarea value={content.about.paragraphs.join('\n\n')} onChange={(e) => setContent({ ...content, about: { ...content.about, paragraphs: e.target.value.split('\n\n') } })} className="mt-4 min-w-0 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm leading-relaxed" rows={5} />
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <label className="flex min-w-0 flex-col gap-1.5">
+            <span className="text-xs font-bold">الرؤية</span>
+            <textarea value={content.about.vision ?? ''} onChange={(e) => setContent({ ...content, about: { ...content.about, vision: e.target.value } })} className="min-w-0 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm leading-relaxed" rows={3} />
+          </label>
+          <label className="flex min-w-0 flex-col gap-1.5">
+            <span className="text-xs font-bold">رسالتنا</span>
+            <textarea value={content.about.mission ?? ''} onChange={(e) => setContent({ ...content, about: { ...content.about, mission: e.target.value } })} className="min-w-0 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm leading-relaxed" rows={3} />
+          </label>
+        </div>
         <div className="mt-6">
           <p className="text-xs font-bold">المميزات (إضافة/حذف/ترتيب/إظهار)</p>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
